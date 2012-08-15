@@ -1,0 +1,30 @@
+# Maintainer:illusionist 
+# github.com/nixmeal
+
+pkgname=dwm
+pkgver=6.0
+pkgrel=1
+pkgdesc="A dynamic window manager for X"
+url="http://dwm.suckless.org"
+arch=('i686' 'x86_64')
+license=('MIT')
+options=(zipman)
+depends=('libx11' 'libxinerama' 'pango')
+source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
+	config.h)
+md5sums=('8bb00d4142259beb11e13473b81c0857'
+	'e1fcb6bcdf9ab3306f0fbf1892d8a2ed')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  cp $srcdir/config.h config.h
+  make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make PREFIX=/usr DESTDIR=$pkgdir install
+  install -m644 -D LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  install -m644 -D README $pkgdir/usr/share/doc/$pkgname/README
+}
+

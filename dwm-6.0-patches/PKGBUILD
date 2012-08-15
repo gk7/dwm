@@ -1,0 +1,58 @@
+#Maintainer: illusionist
+#github.com/nixmeal
+pkgname=dwm
+pkgver=6.0
+pkgrel=1
+pkgdesc="A dynamic window manager for X"
+url="http://dwm.suckless.org"
+arch=('i686' 'x86_64')
+license=('MIT')
+depends=('libxinerama' 'libx11')
+options=(zipman)
+provides=('dwm')
+_source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
+        config.h)
+_patches=(00-dwm-6.0-buildflags.diff
+	  01-dwm-6.0-XKeycodeToKeysym_fix.diff
+	  02-dwm-6.0-statuscolors.diff
+	  03-dwm-6.0-pertag.diff
+	  04-dwm-6.0-monocle_no_borders.diff
+	  05-dwm-6.0-centred-floating.diff
+	  06-dwm-6.0-save_floats.diff
+	  07-dwm-6.0-enternotify.diff
+	  08-dwm-6.0-bstack.diff)	  
+source=(${_source[@]} ${_patches[@]})
+md5sums=(
+	'8bb00d4142259beb11e13473b81c0857'
+	'f9d258570a7aa6aec363483e205164c5'
+	'da9ab0fc2109a274b9d6a5d92d82bd5d'	
+	'd2c0a2ac69286c3798d13d83242a7b87'		
+	'519d395d59b7aee06b0e318e81b25929'		
+	'be94530c8592342bd99c7b5eeafdd176'		
+	'31d570086c566b8dc08d06b792af7a77'		
+	'7aef89991a42e4e65c880a6e60024ed7'		
+	'ad4d21ab24896099a434e3b45ddb6f00'
+	'03d97f2d982403d28f3d5e844053ba67'
+	'b60183f343d3912e841d5cbda3de768f'
+)
+
+build() {
+cd $srcdir/$pkgname-$pkgver
+
+  for PATCH in "${_patches[@]}"; do
+  	echo "=> $PATCH"
+    patch < ../$PATCH || return 1
+  done
+
+  cp $srcdir/config.h config.h
+
+  make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make PREFIX=/usr DESTDIR=$pkgdir install
+  install -m644 -D LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE && \
+  install -m644 -D README $pkgdir/usr/share/doc/$pkgname/README
+  mv -f $startdir/postinstall $startdir/PKGBUILD
+}

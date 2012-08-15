@@ -1,0 +1,11 @@
+--- dwm.c.orig	2012-07-05 20:08:33.000000000 +0200
++++ dwm.c	2012-07-05 20:10:09.478236977 +0200
+@@ -1270,7 +1270,7 @@ monocle(Monitor *m) {
+ 	if(n > 0) /* override layout symbol */
+ 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
+ 	for(c = nexttiled(m->clients); c; c = nexttiled(c->next))
+-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, False);
++		resize(c, m->wx - c->bw, m->wy - c->bw, m->ww, m->wh, False);
+ }
+ 
+ void
