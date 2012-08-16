@@ -7,4 +7,5 @@ be94530c8592342bd99c7b5eeafdd176  03-dwm-6.0-pertag.diff
 ad4d21ab24896099a434e3b45ddb6f00  06-dwm-6.0-save_floats.diff
 03d97f2d982403d28f3d5e844053ba67  07-dwm-6.0-enternotify.diff
 b60183f343d3912e841d5cbda3de768f  08-dwm-6.0-bstack.diff
-f9d258570a7aa6aec363483e205164c5  config.h
+aaca2c2c99ba769349f467c780d20a49  config.h
+d8ea98ac1c84c907c0e1d68c63d85af0  09-dwm-6.0-systray.diff

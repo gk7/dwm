@@ -20,11 +20,12 @@ _patches=(00-dwm-6.0-buildflags.diff
 	  05-dwm-6.0-centred-floating.diff
 	  06-dwm-6.0-save_floats.diff
 	  07-dwm-6.0-enternotify.diff
-	  08-dwm-6.0-bstack.diff)	  
+	  08-dwm-6.0-bstack.diff
+	  09-dwm-6.0-systray.diff)	  
 source=(${_source[@]} ${_patches[@]})
 md5sums=(
 	'8bb00d4142259beb11e13473b81c0857'
-	'f9d258570a7aa6aec363483e205164c5'
+	'aaca2c2c99ba769349f467c780d20a49'
 	'da9ab0fc2109a274b9d6a5d92d82bd5d'	
 	'd2c0a2ac69286c3798d13d83242a7b87'		
 	'519d395d59b7aee06b0e318e81b25929'		
@@ -34,6 +35,7 @@ md5sums=(
 	'ad4d21ab24896099a434e3b45ddb6f00'
 	'03d97f2d982403d28f3d5e844053ba67'
 	'b60183f343d3912e841d5cbda3de768f'
+	'd8ea98ac1c84c907c0e1d68c63d85af0'
 )
 
 build() {
