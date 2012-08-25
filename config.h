@@ -107,6 +107,7 @@ static const char *googleimages[]	=	{ "/home/garry/.firefox/firefox", "-new-tab"
 static const char *thunarterm[]		=	{ "/home/garry/.scripts/thunarterm", NULL };
 static const char *scrlock[]		=	{ "/usr/bin/slock", NULL };
 static const char *killnotify[]		=	{ "/bin/bash", "-c", "/home/garry/.scripts/kilnoti 2>&1> /dev/null", NULL };
+static const char *composite[]		=	{ "/home/garry/.scripts/composite", NULL };
 
 static Key keys[] = {
 	/* modifier                     	key        		function        	argument */
@@ -167,7 +168,8 @@ static Key keys[] = {
 	TAGKEYS(                        	XK_7,                      6)
 	TAGKEYS(                        	XK_8,                      7)
 	TAGKEYS(                        	XK_9,                      8)
-	{ MODKEY|ShiftMask,             	XK_q,      		quit,           {0} },
+	{ MODKEY|ShiftMask,  		        XK_q,      		spawn,          {.v = composite}},
+	{ MODKEY,             			XK_q,      		quit,           {0} },
 };
 
 /* button definitions */
