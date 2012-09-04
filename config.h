@@ -8,34 +8,35 @@ https://www.github.com/nixmeal
 #define NUMCOLORS 21
 static const char colors[NUMCOLORS][ColLast][21] = {
     // border     fg         bg
-	{ "#1A1A1A", "#20b2e7", "#202020" },  // 01 - normal
-    { "#4C4C4C", "#00FF00", "#202020" },  // 02 - selected
-    { "#B3354C", "#B3354C", "#202020" },  // 03 - urgent
+    { "#1A1A1A", "#20b2e7", "#020202" },  // 01 - normal
+    { "#4C4C4C", "#EEEEEC", "#020202" },  // 02 - selected
+    { "#B3354C", "#B3354C", "#020202" },  // 03 - urgent
 
-    { "#1A1A1A", "#1A1A1A", "#202020" },  // 04 - black
-    { "#FF0000", "#FF0000", "#202020" },  // 05 - red
-    { "#608040", "#608040", "#202020" },  // 06 - green
-    { "#877C43", "#877C43", "#202020" },  // 07 - yellow
-    { "#1C678C", "#1C678C", "#202020" },  // 08 - blue
-    { "#E300FF", "#E300FF", "#202020" },  // 09 - magenta
+    { "#1A1A1A", "#1A1A1A", "#020202" },  // 04 - black
+    { "#FF0000", "#FF0000", "#020202" },  // 05 - red
+    { "#608040", "#608040", "#020202" },  // 06 - green
+    { "#877C43", "#877C43", "#020202" },  // 07 - yellow
+    { "#1C678C", "#1C678C", "#020202" },  // 08 - blue
+    { "#E300FF", "#E300FF", "#020202" },  // 09 - magenta
     { "#000000", "#000000", "#000000" },  // unusable
-    { "#337373", "#337373", "#202020" },  // 0B - cyan
-    { "#808080", "#808080", "#202020" },  // 0C - light gray
-    { "#4C4C4C", "#4C4C4C", "#202020" },  // 0D - gray
-    { "#FFEE00", "#FFEE00", "#202020" },  // 0E - yellow2
-    { "#B1D354", "#B1D354", "#202020" },  // 0F - light green
-    { "#BF9F5F", "#BF9F5F", "#202020" },  // 10 - light yellow
-    { "#3995BF", "#3995BF", "#202020" },  // 11 - light blue
-    { "#A64286", "#A64286", "#202020" },  // 12 - light magenta
-    { "#6C98A6", "#6C98A6", "#202020" },  // 13 - light cyan
-    { "#FFA500", "#FFA500", "#202020" },  // 14 - white
+    { "#337373", "#337373", "#020202" },  // 0B - cyan
+    { "#808080", "#808080", "#020202" },  // 0C - light gray
+    { "#4C4C4C", "#4C4C4C", "#020202" },  // 0D - gray
+    { "#FFEE00", "#FFEE00", "#020202" },  // 0E - yellow2
+/*    { "#B1D354", "#B1D354", "#020202" },  // 0F - light green */
+    { "#4C4C4C", "#FFFFFF", "#020202" },  // 0F - White
+    { "#BF9F5F", "#BF9F5F", "#020202" },  // 10 - light yellow
+    { "#3995BF", "#3995BF", "#020202" },  // 11 - light blue
+    { "#A64286", "#A64286", "#020202" },  // 12 - light magenta
+    { "#6C98A6", "#6C98A6", "#020202" },  // 13 - light cyan
+    { "#FFA500", "#FFA500", "#020202" },  // 14 - orange
 
     { "#0300ff", "#0300ff", "#802635" },  // 15 - warning
 };
 
 /*static const char font[]		= "terminus2 9";*/
 static const char font[]		= "-misc-ohsnap.icons-medium-r-normal--0-0-75-75-c-0-iso8859-1";
-static const unsigned int borderpx  	= 1;        	/* border pixel of windows */
+static const unsigned int borderpx  	= 0;        	/* border pixel of windows */
 static const unsigned int snap          = 2;     	// snap pixel
 static const Bool showbar               = True;  	// False means no bar
 static const Bool topbar                = True;  	// False means bottom bar
@@ -66,6 +67,7 @@ static const Rule rules[] = {
 	{ "Gimp",     		NULL,       	NULL,       	1 << 4,         True,        	-1 },
 	{ "Firefox",		NULL,		NULL,	    	1 << 0,	  	False,		-1 },
 	{ "URxvt",		NULL,		NULL,		0,		False,		-1 },
+	{ "VirtualBox",		NULL,		NULL,		1 << 4,		False,		-1 },
 };
 
 
@@ -108,6 +110,7 @@ static const char *thunarterm[]		=	{ "/home/garry/.scripts/thunarterm", NULL };
 static const char *scrlock[]		=	{ "/usr/bin/slock", NULL };
 static const char *killnotify[]		=	{ "/bin/bash", "-c", "/home/garry/.scripts/kilnoti 2>&1> /dev/null", NULL };
 static const char *composite[]		=	{ "/home/garry/.scripts/composite", NULL };
+static const char *windows7[]		=	{ "/home/garry/.scripts/windows7", NULL };
 
 static Key keys[] = {
 	/* modifier                     	key        		function        	argument */
@@ -137,6 +140,7 @@ static Key keys[] = {
 	{ 0,					XK_F4,			spawn,			{.v = thunarterm}},
 	{ 0,					XK_Scroll_Lock,		spawn,			{.v = scrlock}},
 	{ MODKEY,				XK_Escape,		spawn,			{.v = killnotify}},
+	{ MODKEY|ControlMask|ShiftMask,		XK_w,			spawn,			{.v = windows7}},
 	{ MODKEY,                       	XK_b,      		togglebar,     	        {0} },
 	{ MODKEY,                       	XK_j,      		focusstack,     	{.i = +1 } },
 	{ MODKEY,                       	XK_k,      		focusstack,     	{.i = -1 } },
@@ -168,8 +172,8 @@ static Key keys[] = {
 	TAGKEYS(                        	XK_7,                      6)
 	TAGKEYS(                        	XK_8,                      7)
 	TAGKEYS(                        	XK_9,                      8)
-	{ MODKEY|ShiftMask,  		        XK_q,      		spawn,          {.v = composite}},
-	{ MODKEY,             			XK_q,      		quit,           {0} },
+	{ MODKEY|ShiftMask,  		        XK_q,      		spawn,         		 {.v = composite}},
+	{ MODKEY,             			XK_q,      		quit,          		 {0} },
 };
 
 /* button definitions */
