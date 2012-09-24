@@ -9,7 +9,7 @@ https://www.github.com/nixmeal
 static const char colors[NUMCOLORS][ColLast][21] = {
     // border     fg         bg
     { "#1A1A1A", "#20b2e7", "#020202" },  // 01 - normal
-    { "#4C4C4C", "#EEEEEC", "#020202" },  // 02 - selected
+    { "#20b2e7", "#EEEEEC", "#020202" },  // 02 - selected
     { "#B3354C", "#B3354C", "#020202" },  // 03 - urgent
 
     { "#1A1A1A", "#1A1A1A", "#020202" },  // 04 - black
@@ -36,7 +36,7 @@ static const char colors[NUMCOLORS][ColLast][21] = {
 
 /*static const char font[]		= "terminus2 9";*/
 static const char font[]		= "-misc-ohsnap.icons-medium-r-normal--0-0-75-75-c-0-iso8859-1";
-static const unsigned int borderpx  	= 0;        	/* border pixel of windows */
+static const unsigned int borderpx  	= 1;        	/* border pixel of windows */
 static const unsigned int snap          = 2;     	// snap pixel
 static const Bool showbar               = True;  	// False means no bar
 static const Bool topbar                = True;  	// False means bottom bar
@@ -68,6 +68,7 @@ static const Rule rules[] = {
 	{ "Firefox",		NULL,		NULL,	    	1 << 0,	  	False,		-1 },
 	{ "URxvt",		NULL,		NULL,		0,		False,		-1 },
 	{ "VirtualBox",		NULL,		NULL,		1 << 4,		False,		-1 },
+	{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		-1 },
 };
 
 
@@ -117,22 +118,22 @@ static Key keys[] = {
 	{ MODKEY,                       	XK_p,      		spawn,          	{.v = dmenurun } },
 	{ Mod1Mask,				XK_F2,      		spawn,	   		{.v = gmrun } },
 	{ MODKEY,	 			XK_e,	   		spawn,	   		{.v = thunar } },
-	{ MODKEY,				XK_minus,  		spawn,	   		{.v = vollow } },
-	{ MODKEY,				XK_equal,  		spawn,	   		{.v = volhigh } },
-	{ MODKEY,				XK_backslash,		spawn,			{.v = voltoggle } },
-	{ Mod1Mask|ControlMask, 		XK_s, 			spawn,	   		{.v = shutdown } }, 
+	{ 0,					0x1008ff11,  		spawn,	   		{.v = vollow } },
+	{ 0,					0x1008ff13, 		spawn,	   		{.v = volhigh } },
+	{ 0,					0x1008ff12,		spawn,			{.v = voltoggle } },
+	{ MODKEY,			 	0x1008ff2f, 		spawn,	   		{.v = shutdown } }, 
 	{ Mod1Mask|ControlMask,			XK_h, 			spawn,	   		{.v = hibernate } },
 	{ Mod1Mask|ControlMask,			XK_r,   		spawn,	   		{.v = restart } },
-	{ Mod1Mask|ControlMask,			XK_l,			spawn,			{.v = suspend } },
+	{ Mod1Mask|ControlMask,			XK_s,			spawn,			{.v = suspend } },
 	{ Mod1Mask|ControlMask,			XK_Delete,		spawn,			{.v = killdwm } },
 	{ MODKEY,				XK_F1,			spawn,			{.v = terminal } },
 	{ MODKEY,				XK_F2,			spawn,			{.v = firefox } } ,
-	{ MODKEY,				XK_F10,			spawn,			{.v = wallch} },
-	{ MODKEY|ShiftMask,			XK_F10,			spawn,			{.v = wallrev} },
-	{ MODKEY,				XK_F3,			spawn,			{.v = mpd} },
-	{ MODKEY,				XK_bracketleft,		spawn,			{.v = mpdprev} },
-	{ MODKEY,				XK_bracketright,	spawn,			{.v = mpdnext} },
-	{ MODKEY,				XK_slash,		spawn,			{.v = mpdtoggle} },
+	{ 0,					0x1008ff2f,		spawn,			{.v = wallch} },
+	{ ShiftMask,				0x1008ff2f,		spawn,			{.v = wallrev} },
+	{ 0,					0x1008ff1d,		spawn,			{.v = mpd} },
+	{ 0,					0x1008ff18,		spawn,			{.v = mpdprev} },
+	{ 0,					0x1008ff19,		spawn,			{.v = mpdnext} },
+	{ 0,					0x1008ff14,		spawn,			{.v = mpdtoggle} },
 	{ MODKEY,				XK_F4,			spawn,			{.v = pavucontrol}},
 	{ 0,					XK_Pause,		spawn,			{.v = cursorspeed}},
 	{ 0,					XK_Print,		spawn,			{.v = screenshot}},
