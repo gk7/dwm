@@ -8,7 +8,7 @@ https://www.github.com/nixmeal
 #define NUMCOLORS 21
 static const char colors[NUMCOLORS][ColLast][21] = {
     // border     fg         bg
-    { "#1A1A1A", "#20b2e7", "#020202" },  // 01 - normal
+    { "#1A1A1A", "#7d7d7d", "#020202" },  // 01 - normal
     { "#20b2e7", "#EEEEEC", "#020202" },  // 02 - selected
     { "#B3354C", "#B3354C", "#020202" },  // 03 - urgent
 
@@ -36,7 +36,7 @@ static const char colors[NUMCOLORS][ColLast][21] = {
 
 /*static const char font[]		= "terminus2 9";*/
 static const char font[]		= "-misc-ohsnap.icons-medium-r-normal--0-0-75-75-c-0-iso8859-1";
-static const unsigned int borderpx  	= 1;        	/* border pixel of windows */
+static const unsigned int borderpx  	= 0;        	/* border pixel of windows */
 static const unsigned int snap          = 2;     	// snap pixel
 static const Bool showbar               = True;  	// False means no bar
 static const Bool topbar                = True;  	// False means bottom bar
@@ -69,6 +69,7 @@ static const Rule rules[] = {
 	{ "URxvt",		NULL,		NULL,		0,		False,		-1 },
 	{ "VirtualBox",		NULL,		NULL,		1 << 4,		False,		-1 },
 	{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		-1 },
+	{ "qpaeq",		NULL,		NULL,		0,		True,		-1 },
 };
 
 
@@ -96,7 +97,7 @@ static const char *hibernate[]		=	{ "/home/garry/.scripts/system", "hibernate", 
 static const char *restart[]		=	{ "/home/garry/.scripts/system", "restart", NULL };
 static const char *suspend[]		=	{ "/home/garry/.scripts/system", "suspend", NULL };
 static const char *killdwm[]		=	{ "killall", "dwm", NULL };
-static const char *firefox[]		=	{ "/bin/bash", "-c", "/home/garry/.firefox/firefox 2>&1> /dev/null", NULL };
+static const char *browser[]		=	{ "/usr/bin/google-chrome", NULL };
 static const char *wallch[]		=	{ "/home/garry/.scripts/rotatewallpaper", NULL };
 static const char *wallrev[]		=	{ "/home/garry/.scripts/rotatewallreverse", NULL };
 static const char *mpd[]		=	{ "urxvtc", "-e", "ncmpcpp", NULL };
@@ -106,42 +107,42 @@ static const char *mpdtoggle[] 		=	{ "mpc", "toggle", NULL };
 static const char *pavucontrol[]	=	{ "pavucontrol", NULL };
 static const char *cursorspeed[]	=	{ "xset", "r", "rate", "350", "50", NULL };
 static const char *screenshot[]		=	{ "/home/garry/.scripts/screenshot.sh", NULL };
-static const char *googleimages[]	=	{ "/home/garry/.firefox/firefox", "-new-tab", "http://www.google.com/imghp?hl=en&tab=wi", NULL };
 static const char *thunarterm[]		=	{ "/home/garry/.scripts/thunarterm", NULL };
 static const char *scrlock[]		=	{ "/usr/bin/slock", NULL };
 static const char *killnotify[]		=	{ "/bin/bash", "-c", "/home/garry/.scripts/kilnoti 2>&1> /dev/null", NULL };
-static const char *composite[]		=	{ "/home/garry/.scripts/composite", NULL };
-static const char *windows7[]		=	{ "/home/garry/.scripts/windows7", NULL };
+//static const char *composite[]		=	{ "/home/garry/.scripts/composite", NULL };
+static const char *brightup[]		=	{ "/home/garry/.scripts/brightness", "up", NULL };
+static const char *brightdown[]		=	{ "/home/garry/.scripts/brightness", "down", NULL };
 
 static Key keys[] = {
 	/* modifier                     	key        		function        	argument */
-	{ MODKEY,                       	XK_p,      		spawn,          	{.v = dmenurun } },
+	{ MODKEY,				XK_F1,			spawn,			{.v = terminal } },
 	{ Mod1Mask,				XK_F2,      		spawn,	   		{.v = gmrun } },
+	{ MODKEY,				XK_F2,			spawn,			{.v = browser } } ,
+	{ MODKEY,				XK_F3,			spawn,			{.v = pavucontrol}},
+	{ 0,					XK_F4,			spawn,			{.v = thunarterm}},
+	{ Mod1Mask|ControlMask,			XK_Delete,		spawn,			{.v = killdwm } },
+	{ 0,					XK_Pause,		spawn,			{.v = cursorspeed}},
+	{ 0,					XK_Print,		spawn,			{.v = screenshot}},
+	{ 0,					XK_Scroll_Lock,		spawn,			{.v = scrlock}},
+	{ MODKEY,				XK_Escape,		spawn,			{.v = killnotify}},
+	{ MODKEY,                       	XK_p,      		spawn,          	{.v = dmenurun } },
 	{ MODKEY,	 			XK_e,	   		spawn,	   		{.v = thunar } },
+	{ Mod1Mask|ControlMask,			XK_h, 			spawn,	   		{.v = hibernate } },
+	{ Mod1Mask|ControlMask,			XK_r,   		spawn,	   		{.v = restart } },
+	{ Mod1Mask|ControlMask,			XK_s,			spawn,			{.v = suspend } },
 	{ 0,					0x1008ff11,  		spawn,	   		{.v = vollow } },
 	{ 0,					0x1008ff13, 		spawn,	   		{.v = volhigh } },
 	{ 0,					0x1008ff12,		spawn,			{.v = voltoggle } },
 	{ MODKEY,			 	0x1008ff2f, 		spawn,	   		{.v = shutdown } }, 
-	{ Mod1Mask|ControlMask,			XK_h, 			spawn,	   		{.v = hibernate } },
-	{ Mod1Mask|ControlMask,			XK_r,   		spawn,	   		{.v = restart } },
-	{ Mod1Mask|ControlMask,			XK_s,			spawn,			{.v = suspend } },
-	{ Mod1Mask|ControlMask,			XK_Delete,		spawn,			{.v = killdwm } },
-	{ MODKEY,				XK_F1,			spawn,			{.v = terminal } },
-	{ MODKEY,				XK_F2,			spawn,			{.v = firefox } } ,
 	{ 0,					0x1008ff2f,		spawn,			{.v = wallch} },
 	{ ShiftMask,				0x1008ff2f,		spawn,			{.v = wallrev} },
 	{ 0,					0x1008ff1d,		spawn,			{.v = mpd} },
 	{ 0,					0x1008ff18,		spawn,			{.v = mpdprev} },
 	{ 0,					0x1008ff19,		spawn,			{.v = mpdnext} },
 	{ 0,					0x1008ff14,		spawn,			{.v = mpdtoggle} },
-	{ MODKEY,				XK_F4,			spawn,			{.v = pavucontrol}},
-	{ 0,					XK_Pause,		spawn,			{.v = cursorspeed}},
-	{ 0,					XK_Print,		spawn,			{.v = screenshot}},
-	{ ControlMask,				XK_Home,		spawn,			{.v = googleimages}},
-	{ 0,					XK_F4,			spawn,			{.v = thunarterm}},
-	{ 0,					XK_Scroll_Lock,		spawn,			{.v = scrlock}},
-	{ MODKEY,				XK_Escape,		spawn,			{.v = killnotify}},
-	{ MODKEY|ControlMask|ShiftMask,		XK_w,			spawn,			{.v = windows7}},
+	{ MODKEY,				0x1008ff11,		spawn, 			{.v = brightdown} },
+	{ MODKEY, 				0x1008ff13,		spawn,			{.v = brightup} } ,
 	{ MODKEY,                       	XK_b,      		togglebar,     	        {0} },
 	{ MODKEY,                       	XK_j,      		focusstack,     	{.i = +1 } },
 	{ MODKEY,                       	XK_k,      		focusstack,     	{.i = -1 } },
@@ -173,8 +174,9 @@ static Key keys[] = {
 	TAGKEYS(                        	XK_7,                      6)
 	TAGKEYS(                        	XK_8,                      7)
 	TAGKEYS(                        	XK_9,                      8)
-	{ MODKEY|ShiftMask,  		        XK_q,      		spawn,         		 {.v = composite}},
-	{ MODKEY,             			XK_q,      		quit,          		 {0} },
+//	{ MODKEY|ShiftMask,  		        XK_q,      		spawn,         		 {.v = composite}},
+//	{ MODKEY,             			XK_q,      		quit,          		 {0} },
+	{ MODKEY|ShiftMask,			XK_q,			quit,			{0} },
 };
 
 /* button definitions */
