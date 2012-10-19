@@ -3,7 +3,6 @@ Configuration file for DWM.
 Maintainer: illusionist
 https://www.github.com/nixmeal
 */
-#include <bstack.c>
 /*Appearance*/
 #define NUMCOLORS 21
 static const char colors[NUMCOLORS][ColLast][21] = {
@@ -24,7 +23,7 @@ static const char colors[NUMCOLORS][ColLast][21] = {
     { "#4C4C4C", "#4C4C4C", "#020202" },  // 0D - gray
     { "#FFEE00", "#FFEE00", "#020202" },  // 0E - yellow2
 /*    { "#B1D354", "#B1D354", "#020202" },  // 0F - light green */
-    { "#4C4C4C", "#FFFFFF", "#020202" },  // 0F - White
+    { "#20b2e7", "#20b2e7", "#020202" },  // 0F - White
     { "#BF9F5F", "#BF9F5F", "#020202" },  // 10 - light yellow
     { "#3995BF", "#3995BF", "#020202" },  // 11 - light blue
     { "#A64286", "#A64286", "#020202" },  // 12 - light magenta
@@ -55,6 +54,8 @@ static const Layout layouts[] = {
 	{ "[ý]",	NULL },    /* no layout function means floating behavior */
 	{ "[þ]",	tile },
 	{ "[ü]",	bstack },
+	{ "[ú]",	gaplessgrid },
+	{ "[û]",	bstackhoriz },
 };
 
 
@@ -66,10 +67,10 @@ static const Rule rules[] = {
 	/* class      		instance	title		tags mask	isfloating 	monitor */
 	{ "Gimp",     		NULL,       	NULL,       	1 << 4,         True,        	-1 },
 	{ "Firefox",		NULL,		NULL,	    	1 << 0,	  	False,		-1 },
-	{ "URxvt",		NULL,		NULL,		0,		False,		-1 },
 	{ "VirtualBox",		NULL,		NULL,		1 << 4,		False,		-1 },
 	{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		-1 },
-	{ "qpaeq",		NULL,		NULL,		0,		True,		-1 },
+	{ "Qpaeq",		NULL,		NULL,		0,		True,		-1 },
+	{ "Galculator",		NULL,		NULL,		0,		True,		-1 },
 };
 
 
@@ -113,6 +114,7 @@ static const char *killnotify[]		=	{ "/bin/bash", "-c", "/home/garry/.scripts/ki
 //static const char *composite[]		=	{ "/home/garry/.scripts/composite", NULL };
 static const char *brightup[]		=	{ "/home/garry/.scripts/brightness", "up", NULL };
 static const char *brightdown[]		=	{ "/home/garry/.scripts/brightness", "down", NULL };
+static const char *type[]		=	{ "/home/garry/.scripts/type.sh", NULL };
 
 static Key keys[] = {
 	/* modifier                     	key        		function        	argument */
@@ -143,6 +145,7 @@ static Key keys[] = {
 	{ 0,					0x1008ff14,		spawn,			{.v = mpdtoggle} },
 	{ MODKEY,				0x1008ff11,		spawn, 			{.v = brightdown} },
 	{ MODKEY, 				0x1008ff13,		spawn,			{.v = brightup} } ,
+	{ MODKEY,				XK_s,			spawn,			{.v = type} },
 	{ MODKEY,                       	XK_b,      		togglebar,     	        {0} },
 	{ MODKEY,                       	XK_j,      		focusstack,     	{.i = +1 } },
 	{ MODKEY,                       	XK_k,      		focusstack,     	{.i = -1 } },
@@ -157,6 +160,8 @@ static Key keys[] = {
 	{ MODKEY,                       	XK_f,      		setlayout,      	{.v = &layouts[1]} },
 	{ MODKEY,                       	XK_t,      		setlayout,      	{.v = &layouts[2]} },
 	{ MODKEY,				XK_a,			setlayout,		{.v = &layouts[3]} },
+	{ MODKEY,				XK_g,			setlayout,		{.v = &layouts[4]} },
+	{ MODKEY|ShiftMask,			XK_a,			setlayout,		{.v = &layouts[5]} },
 	{ MODKEY,                       	XK_space,  		setlayout,      	{0} },
 	{ MODKEY|ShiftMask,             	XK_space,  		togglefloating, 	{0} },
 	{ MODKEY,                       	XK_0,      		view,           	{.ui = ~0 } },
