@@ -3,46 +3,44 @@ Configuration file for DWM.
 Maintainer: illusionist
 https://www.github.com/nixmeal
 */
-#include <bstack.c>
 /*Appearance*/
 #define NUMCOLORS 21
 static const char colors[NUMCOLORS][ColLast][21] = {
     // border     fg         bg
-	{ "#1A1A1A", "#d6d6d6", "#020202" },  // 01 - normal
-    { "#4C4C4C", "#00FF00", "#020202" },  // 02 - selected
+    { "#1A1A1A", "#7d7d7d", "#020202" },  // 01 - normal
+    { "#20b2e7", "#EEEEEC", "#020202" },  // 02 - selected
     { "#B3354C", "#B3354C", "#020202" },  // 03 - urgent
 
     { "#1A1A1A", "#1A1A1A", "#020202" },  // 04 - black
-    { "#802635", "#802635", "#020202" },  // 05 - red
+    { "#FF0000", "#FF0000", "#020202" },  // 05 - red
     { "#608040", "#608040", "#020202" },  // 06 - green
     { "#877C43", "#877C43", "#020202" },  // 07 - yellow
     { "#1C678C", "#1C678C", "#020202" },  // 08 - blue
-    { "#684D80", "#684D80", "#020202" },  // 09 - magenta
+    { "#E300FF", "#E300FF", "#020202" },  // 09 - magenta
     { "#000000", "#000000", "#000000" },  // unusable
     { "#337373", "#337373", "#020202" },  // 0B - cyan
     { "#808080", "#808080", "#020202" },  // 0C - light gray
     { "#4C4C4C", "#4C4C4C", "#020202" },  // 0D - gray
-    { "#B3354C", "#B3354C", "#020202" },  // 0E - light red
-    { "#4BA65A", "#4BA65A", "#020202" },  // 0F - light green
+    { "#FFEE00", "#FFEE00", "#020202" },  // 0E - yellow2
+/*    { "#B1D354", "#B1D354", "#020202" },  // 0F - light green */
+    { "#20b2e7", "#20b2e7", "#020202" },  // 0F - White
     { "#BF9F5F", "#BF9F5F", "#020202" },  // 10 - light yellow
     { "#3995BF", "#3995BF", "#020202" },  // 11 - light blue
     { "#A64286", "#A64286", "#020202" },  // 12 - light magenta
     { "#6C98A6", "#6C98A6", "#020202" },  // 13 - light cyan
-    { "#B3B3B3", "#B3B3B3", "#020202" },  // 14 - white
+    { "#FFA500", "#FFA500", "#020202" },  // 14 - orange
 
     { "#0300ff", "#0300ff", "#802635" },  // 15 - warning
 };
 
 /*static const char font[]		= "terminus2 9";*/
 static const char font[]		= "-misc-ohsnap.icons-medium-r-normal--0-0-75-75-c-0-iso8859-1";
-static const unsigned int borderpx  	= 1;        	/* border pixel of windows */
+static const unsigned int borderpx  	= 0;        	/* border pixel of windows */
 static const unsigned int snap          = 2;     	// snap pixel
 static const Bool showbar               = True;  	// False means no bar
 static const Bool topbar                = True;  	// False means bottom bar
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const Bool showsystray       = True;     /* False means no systray */
-
-
 
 /* Layout(s) */
 static const float mfact      = 0.63;  // factor of master area size [0.05..0.95]
@@ -50,24 +48,26 @@ static const int nmaster      = 1;     // number of clients in master area
 static const Bool resizehints = False; // True means respect size hints in tiled resizals
 static const Layout layouts[] = {
 	/* symbol	arrange function */
-	{ "[M]",	monocle },    /* first entry is default */
-	{ "[F]",	NULL },    /* no layout function means floating behavior */
-	{ "[T]",	tile },
-	{ "[F]",	bstack },
+	{ "[ÿ]",	monocle },    /* first entry is default */
+	{ "[ý]",	NULL },    /* no layout function means floating behavior */
+	{ "[þ]",	tile },
+	{ "[ü]",	bstack },
+	{ "[ú]",	gaplessgrid },
+	{ "[F]",	spiral },
 };
-
-
 
 /* Tagging */
 static const char *tags[] = { "A", "B", "C", "D", "E" };
 
 static const Rule rules[] = {
 	/* class      		instance	title		tags mask	isfloating 	monitor */
-	{ "Gimp",     		NULL,       	NULL,       	0,            	True,        	-1 },
+	{ "Gimp",     		NULL,       	NULL,       	1 << 4,         True,        	-1 },
 	{ "Firefox",		NULL,		NULL,	    	1 << 0,	  	False,		-1 },
-	{ "URxvt",		NULL,		NULL,		0,		False,		-1 },
+	{ "VirtualBox",		NULL,		NULL,		1 << 4,		False,		-1 },
+	{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		-1 },
+	{ "Qpaeq",		NULL,		NULL,		0,		True,		-1 },
+	{ "Galculator",		NULL,		NULL,		0,		True,		-1 },
 };
-
 
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
@@ -93,9 +93,9 @@ static const char *hibernate[]		=	{ "/home/garry/.scripts/system", "hibernate", 
 static const char *restart[]		=	{ "/home/garry/.scripts/system", "restart", NULL };
 static const char *suspend[]		=	{ "/home/garry/.scripts/system", "suspend", NULL };
 static const char *killdwm[]		=	{ "killall", "dwm", NULL };
-static const char *firefox[]		=	{ "/bin/bash", "-c", "/home/garry/.firefox/firefox 2>&1> /dev/null", NULL };
-static const char *wallch[]		=	{ "/home/garry/.scripts/rotatewallpaper", NULL };
-static const char *wallrev[]		=	{ "/home/garry/.scripts/rotatewallreverse", NULL };
+static const char *browser[]		=	{ "/usr/bin/google-chrome", NULL };
+static const char *wallch[]		=	{ "/home/garry/.scripts/rwall", NULL };
+static const char *wallrev[]		=	{ "/home/garry/.scripts/rwallrev", NULL };
 static const char *mpd[]		=	{ "urxvtc", "-e", "ncmpcpp", NULL };
 static const char *mpdnext[]		=	{ "mpc", "next", NULL };
 static const char *mpdprev[]		=	{ "mpc", "prev", NULL };
@@ -103,38 +103,44 @@ static const char *mpdtoggle[] 		=	{ "mpc", "toggle", NULL };
 static const char *pavucontrol[]	=	{ "pavucontrol", NULL };
 static const char *cursorspeed[]	=	{ "xset", "r", "rate", "350", "50", NULL };
 static const char *screenshot[]		=	{ "/home/garry/.scripts/screenshot.sh", NULL };
-static const char *googleimages[]	=	{ "/home/garry/.firefox/firefox", "-new-tab", "http://www.google.com/imghp?hl=en&tab=wi", NULL };
 static const char *thunarterm[]		=	{ "/home/garry/.scripts/thunarterm", NULL };
 static const char *scrlock[]		=	{ "/usr/bin/slock", NULL };
-
+static const char *killnotify[]		=	{ "/bin/bash", "-c", "/home/garry/.scripts/kilnoti 2>&1> /dev/null", NULL };
+//static const char *composite[]		=	{ "/home/garry/.scripts/composite", NULL };
+static const char *brightup[]		=	{ "/home/garry/.scripts/brightness", "up", NULL };
+static const char *brightdown[]		=	{ "/home/garry/.scripts/brightness", "down", NULL };
+static const char *type[]		=	{ "/home/garry/.scripts/type.sh", NULL };
 
 static Key keys[] = {
 	/* modifier                     	key        		function        	argument */
-	{ MODKEY,                       	XK_p,      		spawn,          	{.v = dmenurun } },
-	{ Mod1Mask,				XK_F2,      		spawn,	   		{.v = gmrun } },
-	{ MODKEY,	 			XK_e,	   		spawn,	   		{.v = thunar } },
-	{ MODKEY,				XK_minus,  		spawn,	   		{.v = vollow } },
-	{ MODKEY,				XK_equal,  		spawn,	   		{.v = volhigh } },
-	{ MODKEY,				XK_backslash,		spawn,			{.v = voltoggle } },
-	{ Mod1Mask|ControlMask, 		XK_s, 			spawn,	   		{.v = shutdown } }, 
-	{ Mod1Mask|ControlMask,			XK_h, 			spawn,	   		{.v = hibernate } },
-	{ Mod1Mask|ControlMask,			XK_r,   		spawn,	   		{.v = restart } },
-	{ Mod1Mask|ControlMask,			XK_l,			spawn,			{.v = suspend } },
-	{ Mod1Mask|ControlMask,			XK_Delete,		spawn,			{.v = killdwm } },
 	{ MODKEY,				XK_F1,			spawn,			{.v = terminal } },
-	{ MODKEY,				XK_F2,			spawn,			{.v = firefox } } ,
-	{ MODKEY,				XK_F10,			spawn,			{.v = wallch} },
-	{ MODKEY|ShiftMask,			XK_F10,			spawn,			{.v = wallrev} },
-	{ MODKEY,				XK_F3,			spawn,			{.v = mpd} },
-	{ MODKEY,				XK_bracketleft,		spawn,			{.v = mpdprev} },
-	{ MODKEY,				XK_bracketright,	spawn,			{.v = mpdnext} },
-	{ MODKEY,				XK_slash,		spawn,			{.v = mpdtoggle} },
-	{ MODKEY,				XK_F4,			spawn,			{.v = pavucontrol}},
+	{ Mod1Mask,				XK_F2,      		spawn,	   		{.v = gmrun } },
+	{ MODKEY,				XK_F2,			spawn,			{.v = browser } } ,
+	{ MODKEY,				XK_F3,			spawn,			{.v = pavucontrol}},
+	{ 0,					XK_F4,			spawn,			{.v = thunarterm}},
+	{ Mod1Mask|ControlMask,			XK_Delete,		spawn,			{.v = killdwm } },
 	{ 0,					XK_Pause,		spawn,			{.v = cursorspeed}},
 	{ 0,					XK_Print,		spawn,			{.v = screenshot}},
-	{ ControlMask,				XK_Home,		spawn,			{.v = googleimages}},
-	{ 0,					XK_F4,			spawn,			{.v = thunarterm}},
 	{ 0,					XK_Scroll_Lock,		spawn,			{.v = scrlock}},
+	{ MODKEY,				XK_Escape,		spawn,			{.v = killnotify}},
+	{ MODKEY,                       	XK_p,      		spawn,          	{.v = dmenurun } },
+	{ MODKEY,	 			XK_e,	   		spawn,	   		{.v = thunar } },
+	{ Mod1Mask|ControlMask,			XK_h, 			spawn,	   		{.v = hibernate } },
+	{ Mod1Mask|ControlMask,			XK_r,   		spawn,	   		{.v = restart } },
+	{ Mod1Mask|ControlMask,			XK_s,			spawn,			{.v = suspend } },
+	{ 0,					0x1008ff11,  		spawn,	   		{.v = vollow } },
+	{ 0,					0x1008ff13, 		spawn,	   		{.v = volhigh } },
+	{ 0,					0x1008ff12,		spawn,			{.v = voltoggle } },
+	{ MODKEY,			 	0x1008ff2f, 		spawn,	   		{.v = shutdown } }, 
+	{ MODKEY,				XK_Right,		spawn,			{.v = wallch} },
+	{ MODKEY,				XK_Left,		spawn,			{.v = wallrev} },
+	{ 0,					0x1008ff1d,		spawn,			{.v = mpd} },
+	{ 0,					0x1008ff18,		spawn,			{.v = mpdprev} },
+	{ 0,					0x1008ff19,		spawn,			{.v = mpdnext} },
+	{ 0,					0x1008ff14,		spawn,			{.v = mpdtoggle} },
+	{ MODKEY,				0x1008ff11,		spawn, 			{.v = brightdown} },
+	{ MODKEY, 				0x1008ff13,		spawn,			{.v = brightup} } ,
+	{ MODKEY,				XK_s,			spawn,			{.v = type} },
 	{ MODKEY,                       	XK_b,      		togglebar,     	        {0} },
 	{ MODKEY,                       	XK_j,      		focusstack,     	{.i = +1 } },
 	{ MODKEY,                       	XK_k,      		focusstack,     	{.i = -1 } },
@@ -149,6 +155,8 @@ static Key keys[] = {
 	{ MODKEY,                       	XK_f,      		setlayout,      	{.v = &layouts[1]} },
 	{ MODKEY,                       	XK_t,      		setlayout,      	{.v = &layouts[2]} },
 	{ MODKEY,				XK_a,			setlayout,		{.v = &layouts[3]} },
+	{ MODKEY,				XK_g,			setlayout,		{.v = &layouts[4]} },
+	{ MODKEY,				XK_v,			setlayout,		{.v = &layouts[5]} },
 	{ MODKEY,                       	XK_space,  		setlayout,      	{0} },
 	{ MODKEY|ShiftMask,             	XK_space,  		togglefloating, 	{0} },
 	{ MODKEY,                       	XK_0,      		view,           	{.ui = ~0 } },
@@ -166,7 +174,9 @@ static Key keys[] = {
 	TAGKEYS(                        	XK_7,                      6)
 	TAGKEYS(                        	XK_8,                      7)
 	TAGKEYS(                        	XK_9,                      8)
-	{ MODKEY|ShiftMask,             	XK_q,      		quit,           {0} },
+//	{ MODKEY|ShiftMask,  		        XK_q,      		spawn,         		 {.v = composite}},
+//	{ MODKEY,             			XK_q,      		quit,          		 {0} },
+	{ MODKEY|ShiftMask,			XK_q,			quit,			{0} },
 };
 
 /* button definitions */
