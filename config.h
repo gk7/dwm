@@ -42,8 +42,6 @@ static const Bool topbar                = True;  	// False means bottom bar
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const Bool showsystray       = True;     /* False means no systray */
 
-
-
 /* Layout(s) */
 static const float mfact      = 0.63;  // factor of master area size [0.05..0.95]
 static const int nmaster      = 1;     // number of clients in master area
@@ -58,8 +56,6 @@ static const Layout layouts[] = {
 	{ "[û]",	bstackhoriz },
 };
 
-
-
 /* Tagging */
 static const char *tags[] = { "A", "B", "C", "D", "E" };
 
@@ -72,7 +68,6 @@ static const Rule rules[] = {
 	{ "Qpaeq",		NULL,		NULL,		0,		True,		-1 },
 	{ "Galculator",		NULL,		NULL,		0,		True,		-1 },
 };
-
 
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
@@ -99,8 +94,8 @@ static const char *restart[]		=	{ "/home/garry/.scripts/system", "restart", NULL
 static const char *suspend[]		=	{ "/home/garry/.scripts/system", "suspend", NULL };
 static const char *killdwm[]		=	{ "killall", "dwm", NULL };
 static const char *browser[]		=	{ "/usr/bin/google-chrome", NULL };
-static const char *wallch[]		=	{ "/home/garry/.scripts/rotatewallpaper", NULL };
-static const char *wallrev[]		=	{ "/home/garry/.scripts/rotatewallreverse", NULL };
+static const char *wallch[]		=	{ "/home/garry/.scripts/rwall", NULL };
+static const char *wallrev[]		=	{ "/home/garry/.scripts/rwallrev", NULL };
 static const char *mpd[]		=	{ "urxvtc", "-e", "ncmpcpp", NULL };
 static const char *mpdnext[]		=	{ "mpc", "next", NULL };
 static const char *mpdprev[]		=	{ "mpc", "prev", NULL };
@@ -137,8 +132,8 @@ static Key keys[] = {
 	{ 0,					0x1008ff13, 		spawn,	   		{.v = volhigh } },
 	{ 0,					0x1008ff12,		spawn,			{.v = voltoggle } },
 	{ MODKEY,			 	0x1008ff2f, 		spawn,	   		{.v = shutdown } }, 
-	{ 0,					0x1008ff2f,		spawn,			{.v = wallch} },
-	{ ShiftMask,				0x1008ff2f,		spawn,			{.v = wallrev} },
+	{ MODKEY,				XK_Right,		spawn,			{.v = wallch} },
+	{ MODKEY,				XK_Left,		spawn,			{.v = wallrev} },
 	{ 0,					0x1008ff1d,		spawn,			{.v = mpd} },
 	{ 0,					0x1008ff18,		spawn,			{.v = mpdprev} },
 	{ 0,					0x1008ff19,		spawn,			{.v = mpdnext} },
