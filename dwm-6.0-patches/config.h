@@ -177,6 +177,7 @@ static Key keys[] = {
 //	{ MODKEY|ShiftMask,  		        XK_q,      		spawn,         		 {.v = composite}},
 //	{ MODKEY,             			XK_q,      		quit,          		 {0} },
 	{ MODKEY|ShiftMask,			XK_q,			quit,			{0} },
+	{ MODKEY|ShiftMask,			XK_r,			reload,			{0} },
 };
 
 /* button definitions */

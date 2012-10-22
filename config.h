@@ -8,7 +8,7 @@ https://www.github.com/nixmeal
 static const char colors[NUMCOLORS][ColLast][21] = {
     // border     fg         bg
     { "#1A1A1A", "#7d7d7d", "#020202" },  // 01 - normal
-    { "#20b2e7", "#EEEEEC", "#020202" },  // 02 - selected
+    { "#ff0000", "#EEEEEC", "#020202" },  // 02 - selected
     { "#B3354C", "#B3354C", "#020202" },  // 03 - urgent
 
     { "#1A1A1A", "#1A1A1A", "#020202" },  // 04 - black
@@ -35,7 +35,7 @@ static const char colors[NUMCOLORS][ColLast][21] = {
 
 /*static const char font[]		= "terminus2 9";*/
 static const char font[]		= "-misc-ohsnap.icons-medium-r-normal--0-0-75-75-c-0-iso8859-1";
-static const unsigned int borderpx  	= 0;        	/* border pixel of windows */
+static const unsigned int borderpx  	= 2;        	/* border pixel of windows */
 static const unsigned int snap          = 2;     	// snap pixel
 static const Bool showbar               = True;  	// False means no bar
 static const Bool topbar                = True;  	// False means bottom bar
@@ -53,7 +53,7 @@ static const Layout layouts[] = {
 	{ "[þ]",	tile },
 	{ "[ü]",	bstack },
 	{ "[ú]",	gaplessgrid },
-	{ "[û]",	bstackhoriz },
+	{ "[ø]",	spiral },
 };
 
 /* Tagging */
@@ -156,7 +156,7 @@ static Key keys[] = {
 	{ MODKEY,                       	XK_t,      		setlayout,      	{.v = &layouts[2]} },
 	{ MODKEY,				XK_a,			setlayout,		{.v = &layouts[3]} },
 	{ MODKEY,				XK_g,			setlayout,		{.v = &layouts[4]} },
-	{ MODKEY|ShiftMask,			XK_a,			setlayout,		{.v = &layouts[5]} },
+	{ MODKEY,				XK_v,			setlayout,		{.v = &layouts[5]} },
 	{ MODKEY,                       	XK_space,  		setlayout,      	{0} },
 	{ MODKEY|ShiftMask,             	XK_space,  		togglefloating, 	{0} },
 	{ MODKEY,                       	XK_0,      		view,           	{.ui = ~0 } },
@@ -177,6 +177,7 @@ static Key keys[] = {
 //	{ MODKEY|ShiftMask,  		        XK_q,      		spawn,         		 {.v = composite}},
 //	{ MODKEY,             			XK_q,      		quit,          		 {0} },
 	{ MODKEY|ShiftMask,			XK_q,			quit,			{0} },
+	{ MODKEY|ShiftMask,			XK_r,			reload,			{0} },
 };
 
 /* button definitions */

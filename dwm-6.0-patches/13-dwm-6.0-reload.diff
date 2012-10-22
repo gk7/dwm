@@ -1,0 +1,22 @@
+--- a/dwm.c	2012-10-23 00:26:25.000000000 +0530
++++ b/dwm.c	2012-10-23 00:39:33.000000000 +0530
+@@ -293,6 +293,7 @@ static int xerror(Display *dpy, XErrorEv
+ static int xerrordummy(Display *dpy, XErrorEvent *ee);
+ static int xerrorstart(Display *dpy, XErrorEvent *ee);
+ static void zoom(const Arg *arg);
++static void reload(const Arg *arg);
+ 
+ /* variables */
+ static Systray *systray = NULL;
+@@ -2705,3 +2706,11 @@ spiral(Monitor *mon) {
+ 	fibonacci(mon, 0);
+ }
+ 
++void                                                                                                                          
++reload(const Arg *arg) {                                                                                                     
++       if (arg->v) {                                                                                                          
++              execvp(((char **)arg->v)[0], (char **)arg->v);                                                                  
++       } else {                                                                                                               
++              execlp("dwm", "dwm", NULL);                                                                                     
++       }                                                                                                                      
++}                                                                                                                             
