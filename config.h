@@ -7,8 +7,8 @@ https://www.github.com/nixmeal
 #define NUMCOLORS 21
 static const char colors[NUMCOLORS][ColLast][21] = {
     // border     fg         bg
-    { "#1A1A1A", "#7d7d7d", "#020202" },  // 01 - normal
-    { "#ff0000", "#EEEEEC", "#020202" },  // 02 - selected
+    { "#ababab", "#7d7d7d", "#020202" },  // 01 - normal
+    { "#FF0000", "#EEEEEC", "#020202" },  // 02 - selected
     { "#B3354C", "#B3354C", "#020202" },  // 03 - urgent
 
     { "#1A1A1A", "#1A1A1A", "#020202" },  // 04 - black
@@ -53,7 +53,7 @@ static const Layout layouts[] = {
 	{ "[þ]",	tile },
 	{ "[ü]",	bstack },
 	{ "[ú]",	gaplessgrid },
-	{ "[ø]",	spiral },
+	{ "[F]",	spiral },
 };
 
 /* Tagging */
@@ -66,7 +66,6 @@ static const Rule rules[] = {
 	{ "VirtualBox",		NULL,		NULL,		1 << 4,		False,		-1 },
 	{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		-1 },
 	{ "Qpaeq",		NULL,		NULL,		0,		True,		-1 },
-	{ "Galculator",		NULL,		NULL,		0,		True,		-1 },
 };
 
 #define MODKEY Mod4Mask
@@ -81,34 +80,34 @@ static const Rule rules[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *dmenurun[] 		= 	{ "/home/garry/.scripts/dmenurun", NULL };
+static const char *dmenurun[] 		= 	{ "/home/garry/.scripts/system", "dmenurun", NULL };
 static const char *terminal[]  		= 	{ "urxvtc", NULL };
 static const char *gmrun[] 		= 	{ "gmrun", NULL  };
 static const char *thunar[] 		= 	{ "thunar", NULL };
-static const char *vollow[] 		=	{ "/home/garry/.scripts/volume", "down", NULL };
-static const char *volhigh[] 		=	{ "/home/garry/.scripts/volume", "up",  NULL };
-static const char *voltoggle[]		=	{ "/home/garry/.scripts/volume", "toggle", NULL };
+static const char *vollow[] 		=	{ "/home/garry/.scripts/system", "volume", "down", NULL };
+static const char *volhigh[] 		=	{ "/home/garry/.scripts/system", "volume", "up",  NULL };
+static const char *voltoggle[]		=	{ "/home/garry/.scripts/system", "volume", "toggle", NULL };
 static const char *shutdown[]		=	{ "/home/garry/.scripts/system", "shutdown", NULL };
 static const char *hibernate[]		=	{ "/home/garry/.scripts/system", "hibernate", NULL };
 static const char *restart[]		=	{ "/home/garry/.scripts/system", "restart", NULL };
 static const char *suspend[]		=	{ "/home/garry/.scripts/system", "suspend", NULL };
 static const char *killdwm[]		=	{ "killall", "dwm", NULL };
 static const char *browser[]		=	{ "/usr/bin/google-chrome", NULL };
-static const char *wallch[]		=	{ "/home/garry/.scripts/rwall", NULL };
-static const char *wallrev[]		=	{ "/home/garry/.scripts/rwallrev", NULL };
+static const char *wallch[]		=	{ "/home/garry/.scripts/wallpaper", "next", NULL };
+static const char *wallrev[]		=	{ "/home/garry/.scripts/wallpaper", "prev", NULL };
 static const char *mpd[]		=	{ "urxvtc", "-e", "ncmpcpp", NULL };
 static const char *mpdnext[]		=	{ "mpc", "next", NULL };
 static const char *mpdprev[]		=	{ "mpc", "prev", NULL };
 static const char *mpdtoggle[] 		=	{ "mpc", "toggle", NULL };
 static const char *pavucontrol[]	=	{ "pavucontrol", NULL };
 static const char *cursorspeed[]	=	{ "xset", "r", "rate", "350", "50", NULL };
-static const char *screenshot[]		=	{ "/home/garry/.scripts/screenshot.sh", NULL };
+static const char *screenshot[]		=	{ "/home/garry/.scripts/system", "screenshot", NULL };
 static const char *thunarterm[]		=	{ "/home/garry/.scripts/thunarterm", NULL };
 static const char *scrlock[]		=	{ "/usr/bin/slock", NULL };
-static const char *killnotify[]		=	{ "/bin/bash", "-c", "/home/garry/.scripts/kilnoti 2>&1> /dev/null", NULL };
+static const char *killnotify[]		=	{ "/home/garry/.scripts/system", "killnotify", NULL };
 //static const char *composite[]		=	{ "/home/garry/.scripts/composite", NULL };
-static const char *brightup[]		=	{ "/home/garry/.scripts/brightness", "up", NULL };
-static const char *brightdown[]		=	{ "/home/garry/.scripts/brightness", "down", NULL };
+static const char *brightup[]		=	{ "/home/garry/.scripts/system", "brightness", "up", NULL };
+static const char *brightdown[]		=	{ "/home/garry/.scripts/system", "brightness", "down", NULL };
 static const char *type[]		=	{ "/home/garry/.scripts/type.sh", NULL };
 
 static Key keys[] = {
@@ -178,6 +177,7 @@ static Key keys[] = {
 //	{ MODKEY,             			XK_q,      		quit,          		 {0} },
 	{ MODKEY|ShiftMask,			XK_q,			quit,			{0} },
 	{ MODKEY|ShiftMask,			XK_r,			reload,			{0} },
+
 };
 
 /* button definitions */
