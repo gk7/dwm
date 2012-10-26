@@ -1,0 +1,10 @@
+--- a/dwm.c	2012-10-23 17:38:11.000000000 +0530
++++ b/dwm.c	2012-10-24 21:50:27.000000000 +0530
+@@ -1324,6 +1324,7 @@ manage(Window w, XWindowAttributes *wa)
+ 	c->sfy = c->y;
+ 	c->sfw = c->w;
+ 	c->sfh = c->h;
++	if ( strncmp(c->name,"photo",5)==0 ) c->isfloating=False;
+ 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+ 	grabbuttons(c, False);
+ 	if(!c->isfloating)

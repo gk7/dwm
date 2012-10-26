@@ -40,3 +40,6 @@ Arranges all windows in Fibonacci tiles: The first window uses half the screen, 
 
 ###attachaside
 Makes the new client get attached and focused in the stacking area instead of always becoming the new master.
+
+###reload
+Reloads dwm without killing the X server.

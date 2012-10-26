@@ -26,12 +26,13 @@ _patches=(
 10-dwm-6.0-gaplessgrid.diff
 11-dwm-6.0-fibonacci.diff
 12-dwm-6.0-attachaside.diff
+13-dwm-6.0-reload.diff
 )
 
 source=(${_source[@]} ${_patches[@]})
 
 md5sums=('8bb00d4142259beb11e13473b81c0857'
-         '996cb467084bdc0ddb6ab03ccf7f9a5f'
+	 '02f53444ec1c3ab0216a1d6c81942675'
          'da9ab0fc2109a274b9d6a5d92d82bd5d'
          'd2c0a2ac69286c3798d13d83242a7b87'
          '519d395d59b7aee06b0e318e81b25929'
@@ -44,7 +45,8 @@ md5sums=('8bb00d4142259beb11e13473b81c0857'
          'd8ea98ac1c84c907c0e1d68c63d85af0'
          '5d663decf762a9055e9027794464f095'
          '6779a0b46a900b1875c604a82ce48afa'
-         '222e04fceb55f00ea510cf9a121ad34d')
+         '222e04fceb55f00ea510cf9a121ad34d'
+	 '09590892d22307bdee2febafa7e04331')
 
 build() {
 cd $srcdir/$pkgname-$pkgver
