@@ -113,6 +113,9 @@ static const char *mouse[]		=	{ "/home/garry/.scripts/system", "mouse", "toggle"
 
 static Key keys[] = {
 	/* modifier                     	key        		function        	argument */
+
+	{ MODKEY,                       	XK_Left,   		view_prev_tag,  	{0} },
+	{ MODKEY,                       	XK_Right,  		view_next_tag,  	{0} },
 	{ MODKEY,				XK_F1,			spawn,			{.v = terminal } },
 	{ Mod1Mask,				XK_F2,      		spawn,	   		{.v = gmrun } },
 	{ MODKEY,				XK_F2,			spawn,			{.v = browser } } ,
@@ -132,8 +135,8 @@ static Key keys[] = {
 	{ 0,					0x1008ff13, 		spawn,	   		{.v = volhigh } },
 	{ 0,					0x1008ff12,		spawn,			{.v = voltoggle } },
 	{ MODKEY,			 	0x1008ff2f, 		spawn,	   		{.v = shutdown } }, 
-	{ MODKEY,				XK_Right,		spawn,			{.v = wallch} },
-	{ MODKEY,				XK_Left,		spawn,			{.v = wallrev} },
+	{ ControlMask,				XK_Right,		spawn,			{.v = wallch} },
+	{ ControlMask,				XK_Left,		spawn,			{.v = wallrev} },
 	{ 0,					0x1008ff1d,		spawn,			{.v = mpd} },
 	{ 0,					0x1008ff18,		spawn,			{.v = mpdprev} },
 	{ 0,					0x1008ff19,		spawn,			{.v = mpdnext} },
