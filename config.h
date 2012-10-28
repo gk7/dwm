@@ -8,7 +8,7 @@ https://www.github.com/nixmeal
 static const char colors[NUMCOLORS][ColLast][21] = {
     // border     fg         bg
     { "#ababab", "#7d7d7d", "#020202" },  // 01 - normal
-    { "#FF0000", "#EEEEEC", "#020202" },  // 02 - selected
+    { "#FF0000", "#20b2e7", "#020202" },  // 02 - selected
     { "#B3354C", "#B3354C", "#020202" },  // 03 - urgent
 
     { "#1A1A1A", "#1A1A1A", "#020202" },  // 04 - black
@@ -109,6 +109,7 @@ static const char *killnotify[]		=	{ "/home/garry/.scripts/system", "killnotify"
 static const char *brightup[]		=	{ "/home/garry/.scripts/system", "brightness", "up", NULL };
 static const char *brightdown[]		=	{ "/home/garry/.scripts/system", "brightness", "down", NULL };
 static const char *type[]		=	{ "/home/garry/.scripts/type.sh", NULL };
+static const char *mouse[]		=	{ "/home/garry/.scripts/system", "mouse", "toggle", NULL };
 
 static Key keys[] = {
 	/* modifier                     	key        		function        	argument */
@@ -139,6 +140,7 @@ static Key keys[] = {
 	{ 0,					0x1008ff14,		spawn,			{.v = mpdtoggle} },
 	{ MODKEY,				0x1008ff11,		spawn, 			{.v = brightdown} },
 	{ MODKEY, 				0x1008ff13,		spawn,			{.v = brightup} } ,
+	{ 0,					0x1008ff2f,		spawn,			{.v = mouse} },
 	{ MODKEY,				XK_s,			spawn,			{.v = type} },
 	{ MODKEY,                       	XK_b,      		togglebar,     	        {0} },
 	{ MODKEY,                       	XK_j,      		focusstack,     	{.i = +1 } },
