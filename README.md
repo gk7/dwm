@@ -1,3 +1,4 @@
+###Most of the patches here are made by fellow archers at bbs.archlinux.org. See "Dwm hackers unite" thread for more awesome patches.
 ##Patch Description:
 
 ###buildflags.diff
