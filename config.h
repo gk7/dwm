@@ -104,12 +104,14 @@ static const char *cursorspeed[]	=	{ "xset", "r", "rate", "350", "50", NULL };
 static const char *screenshot[]		=	{ "/home/garry/.scripts/system", "screenshot", NULL };
 static const char *thunarterm[]		=	{ "/home/garry/.scripts/thunarterm", NULL };
 static const char *scrlock[]		=	{ "/usr/bin/slock", NULL };
-static const char *killnotify[]		=	{ "/home/garry/.scripts/system", "killnotify", NULL };
+static const char *killnotify[]		=	{ "killall", "dunst", NULL };
 //static const char *composite[]		=	{ "/home/garry/.scripts/composite", NULL };
 static const char *brightup[]		=	{ "/home/garry/.scripts/system", "brightness", "up", NULL };
 static const char *brightdown[]		=	{ "/home/garry/.scripts/system", "brightness", "down", NULL };
 static const char *type[]		=	{ "/home/garry/.scripts/type.sh", NULL };
 static const char *mouse[]		=	{ "/home/garry/.scripts/system", "mouse", "toggle", NULL };
+static const char *on[]			=	{ "/home/garry/.scripts/system", "net", "on", NULL };
+static const char *off[]		=	{ "/home/garry/.scripts/system", "net", "off", NULL };
 
 static Key keys[] = {
 	/* modifier                     	key        		function        	argument */
@@ -145,6 +147,8 @@ static Key keys[] = {
 	{ MODKEY, 				0x1008ff13,		spawn,			{.v = brightup} } ,
 	{ 0,					0x1008ff2f,		spawn,			{.v = mouse} },
 	{ MODKEY,				XK_s,			spawn,			{.v = type} },
+	{ MODKEY,				XK_F11,			spawn,			{.v = on} },
+	{ MODKEY,				XK_F12,			spawn,			{.v = off} },
 	{ MODKEY,                       	XK_b,      		togglebar,     	        {0} },
 	{ MODKEY,                       	XK_j,      		focusstack,     	{.i = +1 } },
 	{ MODKEY,                       	XK_k,      		focusstack,     	{.i = -1 } },
