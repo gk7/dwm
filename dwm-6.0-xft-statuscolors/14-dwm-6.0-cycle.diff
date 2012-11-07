@@ -1,0 +1,52 @@
+--- a/dwm.c	2012-11-07 11:29:06.815879000 +0530
++++ b/dwm.c	2012-11-07 11:32:14.916155420 +0530
+@@ -301,6 +301,10 @@ static int xerrorstart(Display *dpy, XEr
+ static void zoom(const Arg *arg);
+ static void reload(const Arg *arg);
+ static void bstack(Monitor *m);
++static void view_next_tag(const Arg *);
++static void view_prev_tag(const Arg *);
++static void view_adjacent_tag(const Arg *, int);
++
+ 
+ /* variables */
+ static Systray *systray = NULL;
+@@ -2582,3 +2586,38 @@ reload(const Arg *arg) {
+               execlp("dwm", "dwm", NULL);                                                                                     
+        }                                                                                                                      
+ }                                                       
++
++static void
++view_adjacent_tag(const Arg *arg, int distance)
++{
++    int i, curtags;
++    int seltag = 0;
++    Arg a;
++
++    curtags = selmon->tagset[selmon->seltags] ^ (arg->ui & TAGMASK);
++   for (i = 0; i < LENGTH(tags); i++) {
++        if ((curtags & (1 << i)) != 0) {
++            seltag = i;
++            break;
++        }
++    }
++    
++    seltag = (seltag + distance) % (int)LENGTH(tags);
++    if (seltag < 0)
++       seltag += LENGTH(tags);
++
++    a.i = (1 << seltag);
++    view(&a);
++}
++
++static void
++view_next_tag(const Arg *arg)
++{
++    view_adjacent_tag(arg, +1);
++}
++
++static void
++view_prev_tag(const Arg *arg)
++{
++    view_adjacent_tag(arg, -1);
++}

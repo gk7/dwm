@@ -1,0 +1,72 @@
+#Maintainer: illusionist
+#github.com/nixmeal
+pkgname=dwm
+pkgver=6.0
+pkgrel=1
+pkgdesc="A dynamic window manager for X"
+url="http://dwm.suckless.org"
+arch=('i686' 'x86_64')
+license=('MIT')
+depends=('libxinerama' 'libx11')
+options=(zipman)
+provides=('dwm')
+_source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
+        config.h)
+_patches=(
+00-dwm-6.0-buildflags.diff
+01-dwm-6.0-xft.diff
+02-dwm-6.0-pertag2.diff
+03-dwm-6.0-uselessgaps.diff
+04-dwm-6.0-systray.diff
+05-dwm-6.0-statuscolors.diff
+06-dwm-6.0-occupiedcol.diff
+07-dwm-6.0-monocle_fixes.diff
+08-dwm-6.0-chat.diff
+09-dwm-6.0-attachaside.diff
+10-dwm-6.0-XKeycodeToKeysym_fix.diff
+11-dwm-6.0-trilby.diff
+12-dwm-6.0-enternotify.diff
+13-dwm-6.0-reload.diff
+14-dwm-6.0-cycle.diff
+)
+
+source=(${_source[@]} ${_patches[@]})
+
+sha512sums=('895d1d363b3756c9ba19dbf06af34be753c1ae5971d540113d7f8901ad174c2e5944ef769b43e65f7b700f34832bb24082bc91d999b287610c9925182ce70c00'
+            '3958925da481d52316bfe65f130984df82f09a58e7750028c63aba283410fafe79ddd2bd3f57da60e681d98ca5b1f39f61740fab236bdf81144c08611bb1daf4'
+            '6988354cd81ed685ad4914b4184d58e0fdaf1051a50118741c8e24f5c9ab464aad7a6cce308765518666a85e3ff455227c5c194f5a0c4465908a48cbd6c879a4'
+            '4d57ba1660d1da6b72ac935489b294036b6b139a0b30c0778204f4ebe825b374748e9ed73653130d641db6403b162eda3da925b5e5170ab11dcd60e98a8570a5'
+            'aa772e258585bbf762255d8a2a4006b4ddc109283ae3347b0841613f6140880038883ae1be9b4031407763b18dc7b3156516dbb326ca2f03855a9b766cd2bb66'
+            '622a3f0a92efc7095da2b99c5a2512525fb00cd287c2ac6460410168195beeafc3787536dd338d48451208eea998040e2500e9888400fb7f758f8230d9fd59c3'
+            'f7ecd687b0ed3e3affa709e784a66a76246df518bc2f5d6b1c6ab5a76c5239e27f82511fb7545779fbb4dd018957d8dddb38ba42a3feec5847928b8d758e93db'
+            'ac9dfbf6aa125afc1b5abfb1913693eb2b746df14289d755fa43e824cbcdf85616ef4d7c4ae748daaab68751899f1765c048b61b813b3e0ce3c5bfb4820aee82'
+            '28b045726b8abd00e431bcf2d8fb591613bfdd9e6c7b6c6245b0d82a08bd9d1c844555e64d5cabaf183bd923baea2ca27026adc9e449be7ad1425c5c6194bcf1'
+            'e61f12c7950aa0dfd74757d864435dc21cb88547bab9b36f822b7d6d52f7f79d29eb34e81271eb35a18a2819a171789d9bc7c22944b7a8e73c1577effe907e2c'
+            '930327a89b23388b2a8d08eeebd2d424085112b7fbb90e1eb5f6d3e150b98b5bb0b7114bf874e64c98b8b438586f0d94b68cb2dee426e19cf1c9a49a8b238660'
+            'd6ff49f57f8283f34c7cc3b9e5ebef900019792f37333b481ff2750c714e88f93a161222122718ea476fa8a7f761cbdec7fee0f76e6470918110bfeaa5c2094d'
+            'd0006a9790273831b8355aabc9fb8bb85a22b14b0a5e1013c554e2d6ccd3b4db52fbdb3cdc68511c0755226f513ee5a24b50ba537c2d90310e559f0a85154243'
+            'e1a45317e9b39116aad53f285aed19994f87cdf20631d8091962e7b2656b3504a1c3f325faafa7797004803940c9470965842311e48ababfb1c744f90991f24c'
+            '5c65eed2b6434dd8008182ccc6e10f47dd6425dea5915c9fb57a74721db88d3a29e5ce84c36bc88881c15d372ed7f2ae3af240543001436195adc7ff9c6e6184'
+            '4d61e517756868d00dba1f9b05fcb3037018829e894932029ad96d1b3215c0abc796653cc0f0628f5b0a1d157402be455b3e79e52ba3400db46fa67fdbd7189b'
+            'a181af753b0d9fe2eee48fa0e5fe8de289265e0725b25162bb5de99743cb5e93939e2a7344fa8dd43906e6eb07db27c1490920d4da472483a1744d4b23e44c73')
+
+build() {
+cd $srcdir/$pkgname-$pkgver
+
+  for PATCH in "${_patches[@]}"; do
+  	echo "=> $PATCH"
+    patch < ../$PATCH || return 1
+  done
+
+  cp $srcdir/config.h config.h
+
+  make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make PREFIX=/usr DESTDIR=$pkgdir install
+  install -m644 -D LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE && \
+  install -m644 -D README $pkgdir/usr/share/doc/$pkgname/README
+  mv -f $startdir/postinstall $startdir/PKGBUILD
+}
