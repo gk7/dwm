@@ -22,7 +22,7 @@ _patches=(
 06-dwm-6.0-occupiedcol.diff
 07-dwm-6.0-monocle_fixes.diff
 08-dwm-6.0-chat.diff
-09-dwm-6.0-attachaside.diff
+#09-dwm-6.0-attachaside.diff
 10-dwm-6.0-XKeycodeToKeysym_fix.diff
 11-dwm-6.0-trilby.diff
 12-dwm-6.0-enternotify.diff
