@@ -1,5 +1,5 @@
 --- dwm.c	2012-11-02 16:47:50.000000000 +0530
-+++ dwm.c-patched	2012-11-11 15:04:44.128453000 +0530
++++ dwm.c-modified1	2012-11-11 16:54:00.718070000 +0530
 @@ -39,6 +39,9 @@
  #include <X11/XKBlib.h>
  #include <fontconfig/fontconfig.h>
@@ -21,7 +21,7 @@
 +#ifndef MIN
  #define MIN(A, B)               ((A) < (B) ? (A) : (B))
 +#endif
-+#define MAXCOLORS				9
++#define MAXCOLORS				21
  #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
  #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
  #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
@@ -157,9 +157,8 @@
  	XftDraw *d;
  
 -	XSetForeground(dpy, dc.gc, col[invert ? ColFG : ColBG].pixel);
--	XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
 +	XSetForeground(dpy, dc.gc, col[ColBG].pixel);
-+//	XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
+ 	XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
  	if(!text)
  		return;
  	olen = strlen(text);
@@ -179,8 +178,8 @@
 +	pango_xft_render_layout(d, (XftColor *) &col[ColFG].pixel, dc.plo, x * PANGO_SCALE, y * PANGO_SCALE);
  
 -	XftDrawStringUtf8(d, &col[invert ? ColBG : ColFG], dc.font.xfont, x, y, (XftChar8 *) buf, len);
-+//	XftDrawStringUtf8(d, (XftColor *) &col[ColFG].pixel, dc.font.xfont, x, y, (XftChar8 *) buf, len);  //gaurav (XftChar8 *)
-+//	XftDrawStringUtf8(d, (XftColor *) &col[ColFG].pixel, dc.font.xfont, x, y, (XftChar8 *) buf, len);  //gaurav (XftChar8 *)
++//	XftDrawStringUtf8(d, (XftColor *) &col[ColFG].pixel, dc.font.xfont, x, y, (XftChar8 *) buf, len);  //(XftChar8 *)
++//	XftDrawStringUtf8(d, (XftColor *) &col[ColFG].pixel, dc.font.xfont, x, y, (XftChar8 *) buf, len);  //(XftChar8 *)
 +	
  	XftDrawDestroy(d);
  }
@@ -285,8 +284,8 @@
 +//	buf[ibuf]=0;
 +//
 +//	XGlyphInfo ext;
-+////	XftTextExtentsUtf8(dpy, dc.font.xfont, (XftChar8 *) buf, lenbuf, &ext); //gaurav
-+//	XftTextExtentsUtf8(dpy, dc.font.xfont, (XftChar8 *) buf, lenbuf, &ext); //gaurav
++////	XftTextExtentsUtf8(dpy, dc.font.xfont, (XftChar8 *) buf, lenbuf, &ext); //
++//	XftTextExtentsUtf8(dpy, dc.font.xfont, (XftChar8 *) buf, lenbuf, &ext); //
 +//	return ext.xOff;
  }
  
