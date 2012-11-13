@@ -25,7 +25,7 @@ _patches=(
 09-dwm-6.0-systray.diff
 10-dwm-6.0-gaplessgrid.diff
 11-dwm-6.0-fibonacci.diff
-12-dwm-6.0-attachaside.diff
+#12-dwm-6.0-attachaside.diff
 13-dwm-6.0-reload.diff
 14-dwm-6.0-cycle.diff
 )
@@ -46,7 +46,7 @@ md5sums=('8bb00d4142259beb11e13473b81c0857'
          'd8ea98ac1c84c907c0e1d68c63d85af0'
          '5d663decf762a9055e9027794464f095'
          '6779a0b46a900b1875c604a82ce48afa'
-         '222e04fceb55f00ea510cf9a121ad34d'
+        # '222e04fceb55f00ea510cf9a121ad34d'
 	 '09590892d22307bdee2febafa7e04331'
 	 'e4dd11b94c8fda84e086dd17996295ff')
 
@@ -68,5 +68,6 @@ package() {
   make PREFIX=/usr DESTDIR=$pkgdir install
   install -m644 -D LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE && \
   install -m644 -D README $pkgdir/usr/share/doc/$pkgname/README
-  mv -f $startdir/postinstall $startdir/PKGBUILD
+  mv $startdir/PKGBUILD $startdir/PKGBUILD-old
+  mv $startdir/postinstall $startdir/PKGBUILD
 }
