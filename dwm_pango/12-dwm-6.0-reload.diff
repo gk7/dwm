@@ -1,0 +1,23 @@
+--- a/dwm.c	2012-11-07 11:22:08.715266000 +0530
++++ b/dwm.c	2012-11-07 11:29:06.815879622 +0530
+@@ -299,6 +299,7 @@ static int xerror(Display *dpy, XErrorEv
+ static int xerrordummy(Display *dpy, XErrorEvent *ee);
+ static int xerrorstart(Display *dpy, XErrorEvent *ee);
+ static void zoom(const Arg *arg);
++static void reload(const Arg *arg);
+ static void bstack(Monitor *m);
+ 
+ /* variables */
+@@ -2572,3 +2573,12 @@ main(int argc, char *argv[]) {
+ 	XCloseDisplay(dpy);
+ 	return EXIT_SUCCESS;
+ }
++
++void                                                                                                                          
++reload(const Arg *arg) {                                                                                                     
++       if (arg->v) {                                                                                                          
++              execvp(((char **)arg->v)[0], (char **)arg->v);                                                                  
++       } else {                                                                                                               
++              execlp("dwm", "dwm", NULL);                                                                                     
++       }                                                                                                                      
++}                                                       
