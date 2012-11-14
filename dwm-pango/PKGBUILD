@@ -23,11 +23,13 @@ _patches=(
 07-dwm-6.0-monocle_fixes.diff
 08-dwm-6.0-chat.diff
 09-dwm-6.0-XKeycodeToKeysym_fix.diff
-10-dwm-6.0-trilby.diff
+10-dwm-6.0-bartrans.diff
 11-dwm-6.0-enternotify.diff
 12-dwm-6.0-reload.diff
 13-dwm-6.0-cycle.diff
 14-dwm-6.0-pangofix.diff
+15-dwm-6.0-moveresize.diff
+16-dwm-6.0-shift2tag.diff
 )
 
 source=(${_source[@]} ${_patches[@]})

@@ -1,0 +1,38 @@
+diff -paur dwm.old/dwm.c dwm.new/dwm.c
+--- dwm.old/dwm.c	2012-06-23 12:14:32.635492292 +0200
++++ dwm.new/dwm.c	2012-06-23 12:14:37.445544930 +0200
+@@ -204,6 +204,7 @@ static void maprequest(XEvent *e);
+ static void monocle(Monitor *m);
+ static void motionnotify(XEvent *e);
+ static void movemouse(const Arg *arg);
++static void moveresize(const Arg *arg);
+ static Client *nexttiled(Client *c);
+ static void pop(Client *);
+ static void propertynotify(XEvent *e);
+@@ -1286,6 +1287,26 @@ movemouse(const Arg *arg) {
+ 	}
+ }
+ 
++void
++moveresize(const Arg *arg) {
++
++	XEvent ev;
++	Monitor *m = selmon;
++	
++	if(!(m->sel && arg && arg->v))
++		return;
++	if(m->lt[m->sellt]->arrange && !m->sel->isfloating)
++		togglefloating(NULL);
++	
++	resize(m->sel, m->sel->x + ((int *)arg->v)[0],
++			m->sel->y + ((int *)arg->v)[1],
++			m->sel->w + ((int *)arg->v)[2],
++			m->sel->h + ((int *)arg->v)[3],
++			True);
++	
++	while(XCheckMaskEvent(dpy, EnterWindowMask, &ev));
++}
++
+ Client *
+ nexttiled(Client *c) {
+ 	for(; c && (c->isfloating || !ISVISIBLE(c)); c = c->next);
