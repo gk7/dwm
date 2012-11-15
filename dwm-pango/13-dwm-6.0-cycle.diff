@@ -1,23 +1,24 @@
---- a/dwm.c	2012-11-07 11:29:06.815879000 +0530
-+++ b/dwm.c	2012-11-07 11:32:14.916155420 +0530
-@@ -301,6 +301,10 @@ static int xerrorstart(Display *dpy, XEr
+--- a/dwm.c	2012-11-15 23:14:47.120390000 +0530
++++ b/dwm.c	2012-11-15 23:25:10.131303000 +0530
+@@ -300,6 +300,11 @@ static int xerrorstart(Display *dpy, XEr
  static void zoom(const Arg *arg);
  static void reload(const Arg *arg);
  static void bstack(Monitor *m);
-+static void view_next_tag(const Arg *);
-+static void view_prev_tag(const Arg *);
-+static void view_adjacent_tag(const Arg *, int);
-+
++static void cycle(const Arg *, int, Bool move);
++static void cyclenext(const Arg *);
++static void cycleprev(const Arg *);
++static void cyclemovenext(const Arg *);
++static void cyclemoveprev(const Arg *);
  
  /* variables */
  static Systray *systray = NULL;
-@@ -2582,3 +2586,38 @@ reload(const Arg *arg) {
+@@ -2570,3 +2575,57 @@ reload(const Arg *arg) {
                execlp("dwm", "dwm", NULL);                                                                                     
         }                                                                                                                      
  }                                                       
 +
 +static void
-+view_adjacent_tag(const Arg *arg, int distance)
++cycle(const Arg *arg, int distance, Bool move)
 +{
 +    int i, curtags;
 +    int seltag = 0;
@@ -36,17 +37,36 @@
 +       seltag += LENGTH(tags);
 +
 +    a.i = (1 << seltag);
++	if(move){
++	tag(&a);
++	view(&a);
++	}
++	else{
 +    view(&a);
++	}
++
 +}
 +
 +static void
-+view_next_tag(const Arg *arg)
++cyclenext(const Arg *arg)
 +{
-+    view_adjacent_tag(arg, +1);
++    cycle(arg, +1, False);
 +}
 +
 +static void
-+view_prev_tag(const Arg *arg)
++cycleprev(const Arg *arg)
 +{
-+    view_adjacent_tag(arg, -1);
++    cycle(arg, -1, False);
++}
++
++static void
++cyclemovenext(const Arg *arg)
++{
++    cycle(arg, +1, True);
++}
++
++static void
++cyclemoveprev(const Arg *arg)
++{
++    cycle(arg, -1, True);
 +}
