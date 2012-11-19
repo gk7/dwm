@@ -30,7 +30,9 @@ _patches=(
 14-dwm-6.0-moveresize.diff
 15-dwm-6.0-push.diff
 16-dwm-6.0-bstack.diff
-#17-dwm-6.0-bartrans.diff
+17-dwm-6.0-centred-floating.diff
+18-dwm-6.0-save_floats.diff
+#19-dwm-6.0-bartrans.diff
 )
 
 source=(${_source[@]} ${_patches[@]})

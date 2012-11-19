@@ -72,6 +72,8 @@ static const Rule rules[] = {
 	{ "VirtualBox",		NULL,		NULL,		1 << 4,		False,		-1 },
 	{ "Google-chrome",	NULL,		NULL,		1 << 0,		False,		-1 },
 	{ "Qpaeq",		NULL,		NULL,		0,		True,		-1 },
+	{ "Pavucontrol",	NULL,		NULL,		0,		True,		-1 },
+	{ "Wxcam",		NULL,		NULL,		0,		True,		-1 },
 };
 
 #define MODKEY Mod4Mask
@@ -104,7 +106,8 @@ static const char *screenshot[]		=	{ "/home/garry/.scripts/system", "screenshot"
 static const char *translate[]		=	{ "/home/garry/.scripts/dmenu-translate", NULL };
 static const char *wallch[]		=	{ "/home/garry/.scripts/wallpaper", "next", NULL };
 static const char *wallrev[]		=	{ "/home/garry/.scripts/wallpaper", "prev", NULL };
-static const char *type[]		=	{ "/home/garry/.scripts/type.sh", NULL };
+static const char *type[]		=	{ "/home/garry/.scripts/type.sh", "kee", NULL };
+static const char *cdb[]		=	{ "/home/garry/.scripts/type.sh", "chrome", NULL };
 static const char *cursorspeed[]	=	{ "xset", "r", "rate", "350", "50", NULL };
 static const char *mpd[]		=	{ "urxvtc", "-e", "ncmpcpp", NULL };
 static const char *killdwm[]		=	{ "killall", "dwm", NULL };
@@ -186,6 +189,7 @@ static Key keys[] = {
 	{ ControlMask|ShiftMask,             	XK_Up,    		moveresize,     	{.v = (int []){ 0, 0, 0, -25 }}},
 	{ ControlMask|ShiftMask,             	XK_Right, 		moveresize,     	{.v = (int []){ 0, 0, 25, 0 }}},
 	{ ControlMask|ShiftMask,             	XK_Left,  		moveresize,     	{.v = (int []){ 0, 0, -25, 0 }}},
+	{ ControlMask,				XK_space,		spawn,			{.v = cdb} },
 	{ MODKEY|ShiftMask,             	XK_j,      		pushup,      		{.i = +1 } },
    	{ MODKEY|ShiftMask,             	XK_k,     		pushdown,      		{.i = -1 } },
 	TAGKEYS(                        	XK_1,                      0)
