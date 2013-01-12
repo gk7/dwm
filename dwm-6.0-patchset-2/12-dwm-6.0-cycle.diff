@@ -1,0 +1,62 @@
+--- a/dwm.c	2012-11-15 23:14:47.120390000 +0530
++++ b/dwm.c	2012-11-15 23:25:10.131303000 +0530
+@@ -300,6 +300,11 @@ static int xerrorstart(Display *dpy, XEr
+ static int xerrorstart(Display *dpy, XErrorEvent *ee);
+ static void zoom(const Arg *arg);
+ static void reload(const Arg *arg);
++static void cycle(const Arg *, Bool move);
++static void cyclenext(const Arg *);
++static void cycleprev(const Arg *);
++static void cyclemovenext(const Arg *);
++static void cyclemoveprev(const Arg *);
+ 
+ /* variables */
+ static Systray *systray = NULL;
+@@ -2570,3 +2575,47 @@ reload(const Arg *arg) {
+               execlp("dwm", "dwm", NULL);                                                                                     
+        }                                                                                                                      
+ }                                                       
++
++static void
++cycle(const Arg *arg, Bool move) {
++	Arg shifted;
++
++	if(arg->i > 0) // left circular shift
++		shifted.ui = (selmon->tagset[selmon->seltags] << arg->i)
++		   | (selmon->tagset[selmon->seltags] >> (LENGTH(tags) - arg->i));
++
++	else // right circular shift
++		shifted.ui = selmon->tagset[selmon->seltags] >> (- arg->i)
++		   | selmon->tagset[selmon->seltags] << (LENGTH(tags) + arg->i);
++		if(move){
++		tag(&shifted);
++		view(&shifted);
++		}
++		else{
++    		view(&shifted);
++		}
++}
++
++static void
++cyclenext(const Arg *arg)
++{
++    cycle(arg, False);
++}
++
++static void
++cycleprev(const Arg *arg)
++{
++    cycle(arg, False);
++}
++
++static void
++cyclemovenext(const Arg *arg)
++{
++    cycle(arg, True);
++}
++
++static void
++cyclemoveprev(const Arg *arg)
++{
++    cycle(arg, True);
++}
