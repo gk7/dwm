@@ -1,0 +1,24 @@
+--- /dev/null	2012-12-10 22:19:32.728356215 +0530
++++ moveresize.c	2012-12-11 03:17:42.173312000 +0530
+@@ -0,0 +1,21 @@
++void
++moveresize(const Arg *arg) {
++
++	XEvent ev;
++	Monitor *m = selmon;
++	
++	if(!(m->sel && arg && arg->v))
++		return;
++	if(m->lt[m->sellt]->arrange && !m->sel->isfloating)
++		togglefloating(NULL);
++	
++	resize(m->sel, m->sel->x + ((int *)arg->v)[0],
++			m->sel->y + ((int *)arg->v)[1],
++			m->sel->w + ((int *)arg->v)[2],
++			m->sel->h + ((int *)arg->v)[3],
++			True);
++	
++	while(XCheckMaskEvent(dpy, EnterWindowMask, &ev));
++}
++
++

@@ -1,0 +1,54 @@
+--- dwm.c	2012-11-17 14:57:21.292952000 +0530
++++ patched-dwm.c	2012-11-17 15:01:02.163276240 +0530
+@@ -189,6 +189,7 @@ static void arrangemon(Monitor *m);
+ static void attach(Client *c);
+ static void attachstack(Client *c);
+ static void buttonpress(XEvent *e);
++static void gaplessgrid(Monitor *m);
+ static void checkotherwm(void);
+ static void cleanup(void);
+ static void cleanupmon(Monitor *mon);
+@@ -2508,6 +2509,43 @@ zoom(const Arg *arg) {
+ 	pop(c);
+ }
+ 
++void
++gaplessgrid(Monitor *m) {
++	unsigned int n, cols, rows, cn, rn, i, cx, cy, cw, ch;
++	Client *c;
++
++	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next))
++		n++;
++	if(n == 0)
++		return;
++
++	/* grid dimensions */
++	for(cols = 0; cols <= n/2; cols++)
++		if(cols*cols >= n)
++			break;
++	if(n == 5) /* set layout against the general calculation: not 1:2:2, but 2:3 */
++		cols = 2;
++	rows = n/cols;
++
++	/* window geometries */
++	cw = cols ? m->ww / cols : m->ww;
++	cn = 0; /* current column number */
++	rn = 0; /* current row number */
++	for(i = 0, c = nexttiled(m->clients); c; i++, c = nexttiled(c->next)) {
++		if(i/rows + 1 > cols - n%cols)
++			rows = n/cols + 1;
++		ch = rows ? m->wh / rows : m->wh;
++		cx = m->wx + cn*cw;
++		cy = m->wy + rn*ch;
++		resize(c, cx, cy, cw - 2 * c->bw, ch - 2 * c->bw, False);
++		rn++;
++		if(rn >= rows) {
++			rn = 0;
++			cn++;
++		}
++	}
++}
++ 
+ int
+ main(int argc, char *argv[]) {
+ 	if(argc == 2 && !strcmp("-v", argv[1]))

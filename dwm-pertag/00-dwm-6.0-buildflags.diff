@@ -1,0 +1,16 @@
+Patch Description:
+Archlinux specific build flags.
+diff -u dwm_original/config.mk dwm_xft/config.mk
+--- dwm_original/config.mk  2012-01-09 19:07:41.065029408 +0400
++++ src/dwm-6.0/config.mk   2012-01-09 19:03:39.721464085 +0400
+@@ -15,8 +15,8 @@
+ XINERAMAFLAGS = -DXINERAMA
+ 
+ # includes and libs
+-INCS = -I. -I/usr/include -I${X11INC}
+-LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS}
++INCS = -I. -I/usr/include -I${X11INC} `pkg-config --cflags xft pango pangoxft`
++LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS} `pkg-config --libs xft pango pangoxft`
+ 
+ # flags
+ CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}

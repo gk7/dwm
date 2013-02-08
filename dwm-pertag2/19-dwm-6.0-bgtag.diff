@@ -1,0 +1,40 @@
+--- dwm.c.orig	2013-01-16 07:07:49.002849207 +0530
++++ dwm.c	2013-01-16 07:09:52.402180696 +0530
+@@ -513,8 +513,8 @@ buttonpress(XEvent *e) {
+ 		i = x = 0;
+ 		do
+ 			x += TEXTW(tags[i].name);
+-		while(ev->x >= x && ++i < LENGTH(tags));
+-		if(i < LENGTH(tags)) {
++		while(ev->x >= x && ++i < (LENGTH(tags) - 1));
++		if(i < (LENGTH(tags) - 1)) {
+ 			click = ClkTagBar;
+ 			arg.ui = 1 << i;
+ 		}
+@@ -865,7 +865,7 @@ drawbar(Monitor *m) {
+ 			urg |= c->tags;
+ 	}
+ 	dc.x = 0;
+-	for(i = 0; i < LENGTH(tags); i++) {
++	for(i = 0; i < (LENGTH(tags) - 1); i++) {
+         dc.w = TEXTW(tags[i].name);
+ 		col = dc.colors[ (m->tagset[m->seltags] & 1 << i) ? 1 : (urg & 1 << i ? 2:(occ & 1 << i ? 3:0)) ];
+         drawtext(tags[i], col, True);
+@@ -2636,7 +2636,7 @@ reload(const Arg *arg) {
+ void
+ cycle(const Arg *arg) {
+     int seltags = selmon->tagset[selmon->seltags];
+-    int numtags = LENGTH(tags);
++    int numtags = (LENGTH(tags) - 1);
+     int delta = arg->i;
+     int curtag = -1;
+ 
+@@ -2651,7 +2651,7 @@ cycle(const Arg *arg) {
+ void
+ tagcycle(const Arg *arg) {
+     int seltags = selmon->tagset[selmon->seltags];
+-    int numtags = LENGTH(tags);
++    int numtags = (LENGTH(tags) - 1);
+     int delta = arg->i;
+     int curtag = -1;
+ 

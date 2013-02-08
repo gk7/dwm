@@ -1,0 +1,43 @@
+--- dwm.c	2012-12-06 16:07:01.260818985 +0530
++++ patched-dwm.c	2012-12-06 16:13:25.371382356 +0530
+@@ -174,6 +174,7 @@ struct Monitor {
+ 	Client *sel;
+ 	Client *stack;
+ 	Monitor *next;
++	Pixmap bartrans;
+ 	Window barwin;
+ 	const Layout *lt[2];
+ 	Pertag *pertag;
+@@ -590,6 +591,7 @@ cleanupmon(Monitor *mon) {
+ 	}
+ 	XUnmapWindow(dpy, mon->barwin);
+ 	XDestroyWindow(dpy, mon->barwin);
++	XFreePixmap(dpy, mon->bartrans);
+ 	free(mon);
+ }
+ 
+@@ -945,8 +947,12 @@ drawtext(const char *text, XftColor col[
+ 	int i, x, y, h, len, olen;
+ 	XftDraw *d;
+ 
++	if (transbar) {
++	XCopyArea(dpy, selmon->bartrans, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h, dc.x, dc.y);
++	} else {
+ 	XSetForeground(dpy, dc.gc, col[ColBG].pixel);
+-	XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w, dc.h);
++	XFillRectangle(dpy, dc.drawable, dc.gc, dc.x, dc.y, dc.w,  dc.h);
++	}
+ 	if(!text)
+ 		return;
+ 	olen = strlen(text);
+@@ -2174,6 +2179,10 @@ updatebars(void) {
+ 		m->barwin = XCreateWindow(dpy, root, m->wx, m->by, w, bh, 0, DefaultDepth(dpy, screen),
+ 		                          CopyFromParent, DefaultVisual(dpy, screen),
+ 		                          CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
++		if (transbar) {
++		m->bartrans = XCreatePixmap(dpy, root, w, bh, DefaultDepth(dpy, screen));
++		XCopyArea(dpy, root, m->bartrans, dc.gc, 0, 0, m->ww, bh, 0, 0);
++		}
+ 		XDefineCursor(dpy, m->barwin, cursor[CurNormal]);
+ 		XMapRaised(dpy, m->barwin);
+ 	}
