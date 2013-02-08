@@ -1,0 +1,46 @@
+--- dwm.c	2012-12-11 20:21:42.060392314 +0530
++++ patched-dwm.c	2012-12-11 20:23:19.780535637 +0530
+@@ -292,6 +292,8 @@ static int xerrordummy(Display *dpy, XEr
+ static int xerrorstart(Display *dpy, XErrorEvent *ee);
+ static void zoom(const Arg *arg);
+ static void reload(const Arg *arg);
++static void cycle(const Arg *arg);
++static void tagcycle(const Arg *arg);
+ 
+ /* variables */
+ static Systray *systray = NULL;
+@@ -2590,3 +2592,34 @@ reload(const Arg *arg) {
+               execlp("dwm", "dwm", NULL);                                                                                     
+        }                                                                                                                      
+ }                                                       
++
++void
++cycle(const Arg *arg) {
++    int seltags = selmon->tagset[selmon->seltags];
++    int numtags = LENGTH(tags);
++    int delta = arg->i;
++    int curtag = -1;
++
++    while(!(seltags & (1 << ++curtag)));
++    curtag = (curtag + delta) % numtags;
++    if(curtag < 0) curtag += numtags;
++
++    const Arg a = { .i = 1 << curtag };
++    view(&a);
++}
++
++void
++tagcycle(const Arg *arg) {
++    int seltags = selmon->tagset[selmon->seltags];
++    int numtags = LENGTH(tags);
++    int delta = arg->i;
++    int curtag = -1;
++
++    while(!(seltags & (1 << ++curtag)));
++    curtag = (curtag + delta) % numtags;
++    if(curtag < 0) curtag += numtags;
++
++    const Arg a = { .i = 1 << curtag };
++    tag(&a);
++    view(&a);
++}

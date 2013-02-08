@@ -1,0 +1,23 @@
+--- dwm.c	2012-11-17 14:27:07.940292668 +0530
++++ patched-dwm.c	2012-11-17 14:28:51.950445205 +0530
+@@ -288,6 +288,7 @@ static int xerror(Display *dpy, XErrorEv
+ static int xerrordummy(Display *dpy, XErrorEvent *ee);
+ static int xerrorstart(Display *dpy, XErrorEvent *ee);
+ static void zoom(const Arg *arg);
++static void reload(const Arg *arg);
+ 
+ /* variables */
+ static Systray *systray = NULL;
+@@ -2557,3 +2558,12 @@ main(int argc, char *argv[]) {
+ 	XCloseDisplay(dpy);
+ 	return EXIT_SUCCESS;
+ }
++
++void                                                                                                                          
++reload(const Arg *arg) {                                                                                                     
++       if (arg->v) {                                                                                                          
++              execvp(((char **)arg->v)[0], (char **)arg->v);                                                                  
++       } else {                                                                                                               
++              execlp("dwm", "dwm", NULL);                                                                                     
++       }                                                                                                                      
++}                                                       

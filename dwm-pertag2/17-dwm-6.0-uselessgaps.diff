@@ -1,0 +1,48 @@
+--- dwm.c	2012-11-22 18:20:30.616615000 +0530
++++ patched-dwm.c	2012-11-22 18:26:17.927125006 +0530
+@@ -343,6 +343,7 @@ static Display *dpy;
+ static DC dc;
+ static Monitor *mons = NULL, *selmon = NULL;
+ static Window root;
++static int globalborder ;
+ 
+ /* configuration, allows nested code to access above variables */
+ #include "config.h"
+@@ -1553,11 +1554,18 @@ resizebarwin(Monitor *m) {
+ void
+ resizeclient(Client *c, int x, int y, int w, int h) {
+ 	XWindowChanges wc;
++	
++	if(c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL) { globalborder = 0 ; }
++	else {
++		if (selmon->lt[selmon->sellt]->arrange == monocle) { globalborder = 0 - borderpx ; }
++		else { globalborder =  gappx ; }
++	}
++
+ 
+-	c->oldx = c->x; c->x = wc.x = x;
+-	c->oldy = c->y; c->y = wc.y = y;
+-	c->oldw = c->w; c->w = wc.width = w;
+-	c->oldh = c->h; c->h = wc.height = h;
++	c->oldx = c->x; c->x = wc.x = x + globalborder ;
++	c->oldy = c->y; c->y = wc.y = y + globalborder ;
++	c->oldw = c->w; c->w = wc.width = w - 2 * globalborder ;
++	c->oldh = c->h; c->h = wc.height = h - 2 * globalborder ;
+ 	wc.border_width = c->bw;
+ 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
+ 	configure(c);
+@@ -1964,12 +1972,12 @@ tile(Monitor *m) {
+ 		if(i < m->nmaster) {
+ 			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
+ 			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
+-			my += HEIGHT(c);
++			my += HEIGHT(c) + 2 * globalborder;
+ 		}
+ 		else {
+ 			h = (m->wh - ty) / (n - i);
+ 			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), False);
+-			ty += HEIGHT(c);
++			ty += HEIGHT(c) + 2 * globalborder;
+ 		}
+ }
+ 

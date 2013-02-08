@@ -1,0 +1,110 @@
+--- dwm.c	2012-11-17 14:31:08.240645000 +0530
++++ patched-dwm.c	2012-11-17 14:36:48.981144901 +0530
+@@ -39,6 +39,9 @@
+ #include <fontconfig/fontconfig.h>
+ #include <X11/Xft/Xft.h>
+ #include <X11/XKBlib.h>
++#include <pango/pango.h>
++#include <pango/pangoxft.h>
++#include <pango/pango-font.h>
+ #ifdef XINERAMA
+ #include <X11/extensions/Xinerama.h>
+ #endif /* XINERAMA */
+@@ -50,8 +53,12 @@
+                                * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
+ #define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
+ #define LENGTH(X)               (sizeof X / sizeof X[0])
++#ifndef MAX
+ #define MAX(A, B)               ((A) > (B) ? (A) : (B))
++#endif
++#ifndef MIN
+ #define MIN(A, B)               ((A) < (B) ? (A) : (B))
++#endif
+ #define MAXCOLORS				21
+ #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
+ #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
+@@ -124,6 +131,10 @@ typedef struct {
+ 	XftColor colors[MAXCOLORS][ColLast];
+ 	Drawable drawable;
+ 	GC gc;
++	XftDraw *xftdrawable;
++	PangoContext *pgc;
++	PangoLayout  *plo;
++	PangoFontDescription *pfd;
+ 	struct {
+ 		int ascent;
+ 		int descent;
+@@ -932,7 +943,7 @@ drawtext(const char *text, XftColor col[
+ 		return;
+ 	olen = strlen(text);
+ 	h = pad ? (dc.font.ascent + dc.font.descent) : 0;
+-	y = dc.y + ((dc.h + dc.font.ascent - dc.font.descent) / 2);
++	y = dc.y + 1;
+ 	x = dc.x + (h / 2);
+ 	/* shorten text if necessary */
+ 	for(len = MIN(olen, sizeof buf); len && textnw(text, len) > dc.w - h; len--);
+@@ -944,7 +955,9 @@ drawtext(const char *text, XftColor col[
+ 
+ 	d = XftDrawCreate(dpy, dc.drawable, DefaultVisual(dpy, screen), DefaultColormap(dpy,screen));
+ 
+-	XftDrawStringUtf8(d, (XftColor *) &col[ColFG].pixel, dc.font.xfont, x, y, (XftChar8 *) buf, len);
++	pango_layout_set_text(dc.plo, text, len);
++	pango_xft_render_layout(d, (XftColor *) &col[ColFG].pixel, dc.plo, x * PANGO_SCALE, y * PANGO_SCALE);
++//	XftDrawStringUtf8(d, (XftColor *) &col[ColFG].pixel, dc.font.xfont, x, y, (XftChar8 *) buf, len);
+ 	XftDrawDestroy(d);
+ }
+ 
+@@ -1168,13 +1181,22 @@ incnmaster(const Arg *arg) {
+ void
+ initfont(const char *fontstr) {
+ 
+-	if(!(dc.font.xfont = XftFontOpenName(dpy,screen,fontstr))
+-	&& !(dc.font.xfont = XftFontOpenName(dpy,screen,"fixed")))
+-		die("error, cannot load font: '%s'\n", fontstr);
+-
+-	dc.font.ascent = dc.font.xfont->ascent;
+-	dc.font.descent = dc.font.xfont->descent;
+-	dc.font.height = dc.font.ascent + dc.font.descent;
++PangoFontMetrics *metrics;
++
++dc.pgc = pango_xft_get_context(dpy, screen);
++dc.pfd = pango_font_description_from_string(fontstr);
++
++metrics = pango_context_get_metrics(dc.pgc, dc.pfd, pango_language_from_string(setlocale(LC_CTYPE, "")));
++dc.font.ascent = pango_font_metrics_get_ascent(metrics) / PANGO_SCALE;
++dc.font.descent = pango_font_metrics_get_descent(metrics) / PANGO_SCALE;
++
++pango_font_metrics_unref(metrics);
++
++dc.plo = pango_layout_new(dc.pgc);
++pango_layout_set_font_description(dc.plo, dc.pfd);
++dc.font.height = dc.font.ascent + dc.font.descent;
++
++
+ }
+ 
+ #ifdef XINERAMA
+@@ -1772,7 +1794,7 @@ setup(void) {
+ 	initfont(font);
+ 	sw = DisplayWidth(dpy, screen);
+ 	sh = DisplayHeight(dpy, screen);
+-	bh = dc.h = dc.font.height + 2;
++	bh = dc.h = dc.font.height + 3;
+ 	updategeom();
+ 	/* init atoms */
+ 	wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
+@@ -1891,9 +1913,11 @@ textnw(const char *text, unsigned int le
+ 	}
+ 	buf[ibuf]=0;
+ 
+-	XGlyphInfo ext;
+-	XftTextExtentsUtf8(dpy, dc.font.xfont, (XftChar8 *) buf, lenbuf, &ext);
+-	return ext.xOff;
++	PangoRectangle r;
++	pango_layout_set_text(dc.plo, buf, lenbuf);
++	pango_layout_get_extents(dc.plo, &r, 0);
++	return r.width / PANGO_SCALE;
++
+ }
+ 
+ void
