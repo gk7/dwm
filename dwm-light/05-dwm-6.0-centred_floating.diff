@@ -1,0 +1,87 @@
+--- dwm.c.backup	2013-03-15 21:18:26.493907000 +0530
++++ dwm.c	2013-03-15 21:25:15.411692597 +0530
+@@ -90,11 +90,12 @@ struct Client {
+ 	char name[256];
+ 	float mina, maxa;
+ 	int x, y, w, h;
++	int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
+ 	int oldx, oldy, oldw, oldh;
+ 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
+ 	int bw, oldbw;
+ 	unsigned int tags;
+-	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
++	Bool isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, needresize, iscentred;
+ 	Client *next;
+ 	Client *snext;
+ 	Monitor *mon;
+@@ -163,6 +164,7 @@ typedef struct {
+ 	const char *title;
+ 	unsigned int tags;
+ 	Bool isfloating;
++    Bool iscentred;
+ 	int monitor;
+ } Rule;
+ 
+@@ -316,6 +318,7 @@ applyrules(Client *c) {
+ 
+ 	/* rule matching */
+ 	c->isfloating = c->tags = 0;
++    c->iscentred = 1;
+ 	XGetClassHint(dpy, c->win, &ch);
+ 	class    = ch.res_class ? ch.res_class : broken;
+ 	instance = ch.res_name  ? ch.res_name  : broken;
+@@ -327,6 +330,7 @@ applyrules(Client *c) {
+ 		&& (!r->instance || strstr(instance, r->instance)))
+ 		{
+ 			c->isfloating = r->isfloating;
++            c->iscentred = r->iscentred;
+ 			c->tags |= r->tags;
+ 			for(m = mons; m && m->num != r->monitor; m = m->next);
+ 			if(m)
+@@ -1162,8 +1166,14 @@ manage(Window w, XWindowAttributes *wa)
+ 		applyrules(c);
+ 	}
+ 	/* geometry */
+-	c->x = c->oldx = wa->x;
+-	c->y = c->oldy = wa->y;
++	if((!c->mon->lt[c->mon->sellt]->arrange || c->isfloating) && c->iscentred) {
++		c->x = c->oldx = c->mon->wx + (c->mon->ww / 2 - wa->width / 2);
++		c->y = c->oldy = c->mon->wy + (c->mon->wh / 2 - wa->height / 2);
++	}
++	else {
++		c->x = c->oldx = wa->x;
++		c->y = c->oldy = wa->y;
++	}
+ 	c->w = c->oldw = wa->width;
+ 	c->h = c->oldh = wa->height;
+ 	c->oldbw = wa->border_width;
+@@ -1185,6 +1195,10 @@ manage(Window w, XWindowAttributes *wa)
+ 	updatewindowtype(c);
+ 	updatesizehints(c);
+ 	updatewmhints(c);
++	c->sfx = c->x;
++	c->sfy = c->y;
++	c->sfw = c->w;
++	c->sfh = c->h;
+ 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+ 	grabbuttons(c, False);
+ 	if(!c->isfloating)
+@@ -1794,8 +1808,16 @@ togglefloating(const Arg *arg) {
+ 		return;
+ 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
+ 	if(selmon->sel->isfloating)
+-		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
+-		       selmon->sel->w, selmon->sel->h, False);
++		/*restore last known float dimensions*/
++		resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
++		       selmon->sel->sfw, selmon->sel->sfh, False);
++	else {
++		/*save last known float dimensions*/
++		selmon->sel->sfx = selmon->sel->x;
++		selmon->sel->sfy = selmon->sel->y;
++		selmon->sel->sfw = selmon->sel->w;
++		selmon->sel->sfh = selmon->sel->h;
++	}
+ 	arrange(selmon);
+ }
+ 
