@@ -13,15 +13,16 @@ provides=('dwm')
 _source=(http://dl.suckless.org/dwm/dwm-$pkgver.tar.gz
         config.h)
 _patches=(
-00-dwm-6.0-buildflags.diff
-01-dwm-6.0-xft.diff
-02-dwm-6.0-pertag2.diff
-03-dwm-6.0-status_occupiedcol.diff
-04-dwm-6.0-enternotify_reload.diff
-05-dwm-6.0-centred_floating.diff
-06-dwm-6.0-layout.diff
-07-dwm-6.0-layout_cycle.diff
-08-dwm-6.0-single_window.diff
+01-dwm-6.0-statuscolors.diff
+02-dwm-6.0-floating.diff
+03-dwm-6.0-layouts.diff
+04-dwm-6.0-moveresize.diff
+05-dwm-6.0-enternotify_reload.diff
+06-dwm-6.0-noborder.diff
+07-dwm-6.0-client_count.diff
+08-dwm-6.0-tag_layout_cycle.diff
+09-dwm-6.0-emptyhide.diff
+10-dwm-6.0-focuspulled.diff
 )
 
 source=(${_source[@]} ${_patches[@]})

@@ -1,0 +1,71 @@
+Cycle through tags and different layouts.
+--- dwm.c.patched	2013-03-28 15:52:27.571252000 +0530
++++ dwm.c	2013-03-28 15:54:33.911438204 +0530
+@@ -257,6 +257,10 @@ static int xerror(Display *dpy, XErrorEv
+ static int xerrordummy(Display *dpy, XErrorEvent *ee);
+ static int xerrorstart(Display *dpy, XErrorEvent *ee);
+ static void zoom(const Arg *arg);
++static void cycle(const Arg *arg); 
++static void tagcycle(const Arg *arg); 
++static void nextlayout(const Arg *arg); 
++static void prevlayout(const Arg *arg); 
+ 
+ /* variables */
+ static const char broken[] = "broken";
+@@ -2224,6 +2228,56 @@ zoom(const Arg *arg) {
+ 	pop(c);
+ }
+ 
++static void
++cycle(const Arg *arg) {
++    int seltags = selmon->tagset[selmon->seltags];
++    int numtags = LENGTH(tags);
++    int delta = arg->i;
++    int curtag = -1;
++
++    while(!(seltags & (1 << ++curtag)));
++    curtag = (curtag + delta) % numtags;
++    if(curtag < 0) curtag += numtags;
++
++    const Arg a = { .i = 1 << curtag };
++    view(&a);
++}
++
++static void
++tagcycle(const Arg *arg) {
++    int seltags = selmon->tagset[selmon->seltags];
++    int numtags = LENGTH(tags);
++    int delta = arg->i;
++    int curtag = -1;
++
++    while(!(seltags & (1 << ++curtag)));
++    curtag = (curtag + delta) % numtags;
++    if(curtag < 0) curtag += numtags;
++
++    const Arg a = { .i = 1 << curtag };
++    tag(&a);
++    view(&a);
++}
++static void
++nextlayout(const Arg *arg) {
++    Layout *l;
++    for (l=(Layout *)layouts;l != selmon->lt[selmon->sellt];l++);
++    if (l->symbol && (l + 1)->symbol)
++        setlayout(&((Arg) { .v = (l + 1) }));
++    else
++        setlayout(&((Arg) { .v = layouts }));
++}
++
++static void
++prevlayout(const Arg *arg) {
++    Layout *l;
++    for (l=(Layout *)layouts;l != selmon->lt[selmon->sellt];l++);
++    if (l != layouts && (l - 1)->symbol)
++        setlayout(&((Arg) { .v = (l - 1) }));
++    else
++        setlayout(&((Arg) { .v = &layouts[LENGTH(layouts) - 2] }));
++}
++
+ int
+ main(int argc, char *argv[]) {
+ 	if(argc == 2 && !strcmp("-v", argv[1]))

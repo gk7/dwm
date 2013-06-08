@@ -1,0 +1,30 @@
+No border around the window while there is only one.
+--- dwm.c	2013-03-28 15:04:40.237047000 +0530
++++ dwm-6.2.0/dwm.c	2013-03-28 15:13:35.157831969 +0530
+@@ -1247,7 +1247,7 @@ monocle(Monitor *m) {
+ 	if(n > 0) /* override layout symbol */
+ 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
+ 	for(c = nexttiled(m->clients); c; c = nexttiled(c->next))
+-		resize(c, m->wx, m->wy, m->ww - 2 * c->bw, m->wh - 2 * c->bw, False);
++		resize(c, m->wx - c->bw, m->wy - c->bw, m->ww, m->wh, False);
+ }
+ 
+ void
+@@ -1411,7 +1411,16 @@ resizeclient(Client *c, int x, int y, in
+ 	c->oldy = c->y; c->y = wc.y = y;
+ 	c->oldw = c->w; c->w = wc.width = w;
+ 	c->oldh = c->h; c->h = wc.height = h;
+-	wc.border_width = c->bw;
++	wc.border_width = c->mon->lt[c->mon->sellt]->arrange == monocle && !c->isfloating ? 0 : c->bw;
++	if(selmon->wx == c->x && selmon->wy == c->y && selmon->ww - 2 * c->bw == c->w && selmon->wh - 2 * c->bw == c->h && !c->isfloating && !c->isfullscreen) {
++		wc.border_width = 0;
++		c->w = wc.width += c->bw * 2;
++		c->h = wc.height += c->bw * 2;
++	}
++	else if(c->mon->lt[c->mon->sellt]->arrange == monocle && !c->isfloating) {
++		c->w = wc.width += 2 * c->bw;
++		c->h = wc.height += 2 * c->bw;
++	}
+ 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
+ 	configure(c);
+ 	XSync(dpy, False);

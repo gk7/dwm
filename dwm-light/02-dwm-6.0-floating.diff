@@ -1,6 +1,7 @@
---- dwm.c.backup	2013-03-15 21:18:26.493907000 +0530
-+++ dwm.c	2013-03-15 21:25:15.411692597 +0530
-@@ -90,11 +90,12 @@ struct Client {
+Saves a floting window's geometry.
+--- dwm.c	2013-03-28 12:46:57.884929000 +0530
++++ dwm-6.2.0/dwm.c	2013-03-28 14:28:37.333875104 +0530
+@@ -87,11 +87,12 @@ struct Client {
  	char name[256];
  	float mina, maxa;
  	int x, y, w, h;
@@ -14,7 +15,7 @@
  	Client *next;
  	Client *snext;
  	Monitor *mon;
-@@ -163,6 +164,7 @@ typedef struct {
+@@ -151,6 +152,7 @@ typedef struct {
  	const char *title;
  	unsigned int tags;
  	Bool isfloating;
@@ -22,23 +23,23 @@
  	int monitor;
  } Rule;
  
-@@ -316,6 +318,7 @@ applyrules(Client *c) {
+@@ -301,6 +303,7 @@ applyrules(Client *c) {
  
  	/* rule matching */
  	c->isfloating = c->tags = 0;
-+    c->iscentred = 1;
++	c->iscentred = 1;
  	XGetClassHint(dpy, c->win, &ch);
  	class    = ch.res_class ? ch.res_class : broken;
  	instance = ch.res_name  ? ch.res_name  : broken;
-@@ -327,6 +330,7 @@ applyrules(Client *c) {
+@@ -312,6 +315,7 @@ applyrules(Client *c) {
  		&& (!r->instance || strstr(instance, r->instance)))
  		{
  			c->isfloating = r->isfloating;
-+            c->iscentred = r->iscentred;
++			c->iscentred = r->iscentred;
  			c->tags |= r->tags;
  			for(m = mons; m && m->num != r->monitor; m = m->next);
  			if(m)
-@@ -1162,8 +1166,14 @@ manage(Window w, XWindowAttributes *wa)
+@@ -1135,8 +1139,14 @@ manage(Window w, XWindowAttributes *wa)
  		applyrules(c);
  	}
  	/* geometry */
@@ -55,7 +56,7 @@
  	c->w = c->oldw = wa->width;
  	c->h = c->oldh = wa->height;
  	c->oldbw = wa->border_width;
-@@ -1185,6 +1195,10 @@ manage(Window w, XWindowAttributes *wa)
+@@ -1158,6 +1168,10 @@ manage(Window w, XWindowAttributes *wa)
  	updatewindowtype(c);
  	updatesizehints(c);
  	updatewmhints(c);
@@ -66,7 +67,32 @@
  	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
  	grabbuttons(c, False);
  	if(!c->isfloating)
-@@ -1794,8 +1808,16 @@ togglefloating(const Arg *arg) {
+@@ -1429,13 +1443,12 @@ restack(Monitor *m) {
+ 	drawbar(m);
+ 	if(!m->sel)
+ 		return;
+-	if(m->sel->isfloating || !m->lt[m->sellt]->arrange)
+-		XRaiseWindow(dpy, m->sel->win);
++	XRaiseWindow(dpy, m->sel->win);     //floatfix
+ 	if(m->lt[m->sellt]->arrange) {
+ 		wc.stack_mode = Below;
+ 		wc.sibling = m->barwin;
+ 		for(c = m->stack; c; c = c->snext)
+-			if(!c->isfloating && ISVISIBLE(c)) {
++			if(c != m->sel && !c->isfloating && ISVISIBLE(c)) {         //floatfix
+ 				XConfigureWindow(dpy, c->win, CWSibling|CWStackMode, &wc);
+ 				wc.sibling = c->win;
+ 			}
+@@ -1602,7 +1615,7 @@ setup(void) {
+ 	initfont(font);
+ 	sw = DisplayWidth(dpy, screen);
+ 	sh = DisplayHeight(dpy, screen);
+-	bh = dc.h = dc.font.height + 2;
++	bh = dc.h = dc.font.height + 1;
+ 	updategeom();
+ 	/* init atoms */
+ 	wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
+@@ -1764,8 +1777,16 @@ togglefloating(const Arg *arg) {
  		return;
  	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
  	if(selmon->sel->isfloating)

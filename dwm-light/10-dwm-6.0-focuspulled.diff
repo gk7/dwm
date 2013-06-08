@@ -1,0 +1,24 @@
+Focuses first window to master from the pulled tag.
+--- dwm.c.backup	2013-06-09 00:57:52.601771000 +0530
++++ dwm.c	2013-06-09 01:00:20.457637177 +0530
+@@ -1868,10 +1868,19 @@ toggletag(const Arg *arg) {
+ void
+ toggleview(const Arg *arg) {
+ 	unsigned int newtagset = selmon->tagset[selmon->seltags] ^ (arg->ui & TAGMASK);
++	Client *c = NULL;
++	unsigned int found = 0;
+ 
+ 	if(newtagset) {
+ 		selmon->tagset[selmon->seltags] = newtagset;
+-		focus(NULL);
++		for(c = selmon->clients; c && !(found = c->tags & arg->ui); c = c->next);
++		if(found && ISVISIBLE(c)) {
++			detach(c);
++			attach(c);
++			focus(c);
++		}
++		else
++			focus(NULL);
+ 		arrange(selmon);
+ 	}
+ }

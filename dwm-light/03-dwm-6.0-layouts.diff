@@ -1,0 +1,112 @@
+Adds different layouts to dwm.
+--- /dev/null	2013-03-28 10:29:08.625922365 +0530
++++ gaplessgrid.c	2013-03-28 14:45:52.065392743 +0530
+@@ -0,0 +1,36 @@
++static void
++gaplessgrid(Monitor *m) {
++	unsigned int n, cols, rows, cn, rn, i, cx, cy, cw, ch;
++	Client *c;
++
++	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next))
++		n++;
++	if(n == 0)
++		return;
++
++	/* grid dimensions */
++	for(cols = 0; cols <= n/2; cols++)
++		if(cols*cols >= n)
++			break;
++	if(n == 5) /* set layout against the general calculation: not 1:2:2, but 2:3 */
++		cols = 2;
++	rows = n/cols;
++
++	/* window geometries */
++	cw = cols ? m->ww / cols : m->ww;
++	cn = 0; /* current column number */
++	rn = 0; /* current row number */
++	for(i = 0, c = nexttiled(m->clients); c; i++, c = nexttiled(c->next)) {
++		if(i/rows + 1 > cols - n%cols)
++			rows = n/cols + 1;
++		ch = rows ? m->wh / rows : m->wh;
++		cx = m->wx + cn*cw;
++		cy = m->wy + rn*ch;
++		resize(c, cx, cy, cw - 2 * c->bw, ch - 2 * c->bw, False);
++		rn++;
++		if(rn >= rows) {
++			rn = 0;
++			cn++;
++		}
++	}
++}
+--- /dev/null	2013-03-28 10:29:08.625922365 +0530
++++ bstack.c	2013-03-28 14:47:53.035570155 +0530
+@@ -0,0 +1,34 @@
++// bstack without pertag patch
++static void
++bstack(Monitor *m) {
++	int w, h, mh, mx, tx, ty, tw;
++	unsigned int i, n;
++	Client *c;
++
++	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
++	if(n == 0)
++		return;
++	if(n > m->nmaster) {
++		mh = m->nmaster ? m->mfact * m->wh : 0;
++		tw = m->ww / (n - m->nmaster);
++		ty = m->wy + mh;
++	} 
++	else {
++		mh = m->wh;
++		tw = m->ww;
++		ty = m->wy;
++	}
++	for(i = mx = 0, tx = m->wx, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
++		if(i < m->nmaster) {
++			w = (m->ww - mx) / (MIN(n, m->nmaster) - i);
++			resize(c, m->wx + mx, m->wy, w - (2 * c->bw), mh - (2 * c->bw), False);
++			mx += WIDTH(c);
++		} 
++		else {
++			h = m->wh - mh;
++			resize(c, tx, ty, tw - (2 * c->bw), h - (2 * c->bw), False);
++			if(tw != m->ww)
++				tx += WIDTH(c);
++		}
++	}
++}
+--- /dev/null	2013-03-28 10:29:08.625922365 +0530
++++ togglefullscreen.c	2012-11-30 22:30:45.111148000 +0530
+@@ -0,0 +1,32 @@
++void
++togglefullscreen(const Arg *arg) {
++	Client *c = selmon->sel;
++
++	if(!c)
++		return;
++	if(!c->isfullscreen) {
++		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
++		                PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
++		c->isfullscreen = True;
++		c->oldstate = c->isfloating;
++		c->oldbw = c->bw;
++		c->bw = 0;
++		c->isfloating = True;
++		resizeclient(c, c->mon->mx, c->mon->my, c->mon->mw, c->mon->mh);
++		XRaiseWindow(dpy, c->win);
++	}
++	else
++	{
++		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
++		                PropModeReplace, (unsigned char*)0, 0);
++		c->isfullscreen = False;
++		c->isfloating = c->oldstate;
++		c->bw = c->oldbw;
++		c->x = c->oldx;
++		c->y = c->oldy;
++		c->w = c->oldw;
++		c->h = c->oldh;
++		resizeclient(c, c->x, c->y, c->w, c->h);
++		arrange(c->mon);
++	}
++}

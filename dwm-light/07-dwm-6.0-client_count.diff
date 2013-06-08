@@ -1,0 +1,37 @@
+Count all the windows of the currently focused tag(s).
+--- dwm.c	2013-03-28 15:13:35.157831000 +0530
++++ dwm-6.2.0/dwm.c	2013-03-28 15:23:40.458719756 +0530
+@@ -730,6 +730,8 @@ drawbar(Monitor *m) {
+ 	int x;
+ 	unsigned int i, occ = 0, urg = 0;
+ 	unsigned long *col;
++	unsigned int a= 0, s= 0;
++	char posbuf[10];
+ 	Client *c;
+ 
+ 	for(c = m->clients; c; c = c->next) {
+@@ -748,6 +750,15 @@ drawbar(Monitor *m) {
+ 	drawtext(m->ltsymbol, dc.colors[5], False);
+ 	dc.x += dc.w;
+ 	x = dc.x;
++		for(c= nexttiled(m->clients), a= 0, s= 0; c; c= nexttiled(c->next), a++)
++			if(c == m->stack)
++				s= a;
++		if(!s && a)
++			s= a;
++		snprintf(posbuf, LENGTH(posbuf), "[%d/%d]", s, a);
++		dc.w= TEXTW(posbuf);
++		drawtext(posbuf, dc.colors[0], True);   // "dc.colors[0]" for statuscolors patch, changed False to True
++		x= dc.x + dc.w;
+ 	if(m == selmon) { /* status is only drawn on selected monitor */
+ 		dc.w = textnw(stext, strlen(stext)); // no padding
+ 		dc.x = m->ww - dc.w;
+@@ -1244,8 +1255,6 @@ monocle(Monitor *m) {
+ 	for(c = m->clients; c; c = c->next)
+ 		if(ISVISIBLE(c))
+ 			n++;
+-	if(n > 0) /* override layout symbol */
+-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
+ 	for(c = nexttiled(m->clients); c; c = nexttiled(c->next))
+ 		resize(c, m->wx - c->bw, m->wy - c->bw, m->ww, m->wh, False);
+ }

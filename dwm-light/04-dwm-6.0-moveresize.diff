@@ -1,0 +1,23 @@
+Move and resize floating clints with keyboard.
+--- /dev/null	2013-03-28 10:29:08.625922365 +0530
++++ moveresize.c	2013-03-28 14:57:41.596433385 +0530
+@@ -0,0 +1,19 @@
++void
++moveresize(const Arg *arg) {
++
++	XEvent ev;
++	Monitor *m = selmon;
++	
++	if(!(m->sel && arg && arg->v))
++		return;
++	if(m->lt[m->sellt]->arrange && !m->sel->isfloating)
++		togglefloating(NULL);
++	
++	resize(m->sel, m->sel->x + ((int *)arg->v)[0],
++			m->sel->y + ((int *)arg->v)[1],
++			m->sel->w + ((int *)arg->v)[2],
++			m->sel->h + ((int *)arg->v)[3],
++			True);
++	
++	while(XCheckMaskEvent(dpy, EnterWindowMask, &ev));
++}
