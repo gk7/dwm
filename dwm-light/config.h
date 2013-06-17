@@ -1,13 +1,13 @@
 /* 
 Configuration file for DWM. 
 Maintainer: illusionist
-https://www.github.com/nixmeal
+https://www.github.com/gk7
 */
 /*Appearance*/
 #include "moveresize.c"
 #include "bstack.c"
 #include "gaplessgrid.c"
-#include "togglefullscreen.c"
+#include "tcl.h"
 #define NUMCOLORS 8
 static const char colors[NUMCOLORS][ColLast][20] = {
     // border     fg         bg
@@ -45,7 +45,7 @@ static const Bool topbar                	= True;  	    // False means bottom bar
 static const float mfact      			= 0.65;  	        // factor of master area size [0.05..0.95]
 static const int nmaster      			= 1;     	        // number of clients in master area
 static const Bool resizehints 			= False; 	        // True means respect size hints in tiled resizals
-enum { LayoutMonocle = 0, LayoutGrid, LayoutBstack, LayoutTile, LayoutFloat };
+enum { LayoutMonocle = 0, LayoutGrid, LayoutBstack, LayoutTile, LayoutTcl, LayoutFloat };
 enum { LayoutDefault = LayoutMonocle};
 static const Layout layouts[] = {
 	/* symbol	function */
@@ -53,6 +53,7 @@ static const Layout layouts[] = {
 	{ "[ú]",	gaplessgrid },
 	{ "[ü]",	bstack },
 	{ "[þ]",	tile },
+    { "[ô]",    tcl },
 	{ "[ý]",	NULL },    		                            /* no layout function means floating behavior */
     { NULL,     NULL },
 };
@@ -135,7 +136,7 @@ static Key keys[] = {
 	/* modifier                     	key        				function        	argument */
 	{ Modkey,							XK_Escape,				spawn,				{.v = killnotify } },
 	{ Shiftkey,							XK_space,				spawn,				{.v = terminal } },
-	{ Altkey,               			XK_space,      		    spawn,      	    {.v = dmenurun } },
+	{ Shiftkey,               			XK_Return,      		spawn,      	    {.v = dmenurun } },
 	{ Modkey,	 						XK_e,	   				spawn,	   			{.v = fileman} },
 	{ Modkey,							0x1008ff11,				spawn, 				{.v = brightdown} },
 	{ Modkey, 							0x1008ff13,				spawn,				{.v = brightup} } ,
@@ -181,6 +182,7 @@ static Key keys[] = {
 	{ Modkey,           			    XK_t,      				setlayout,  	    {.v = &layouts[LayoutTile]} },
 	{ Modkey,							XK_a,					setlayout,			{.v = &layouts[LayoutBstack]} },
 	{ Modkey,							XK_g,					setlayout,			{.v = &layouts[LayoutGrid]} },
+	{ Modkey,							XK_q,					setlayout,			{.v = &layouts[LayoutTcl]} },
     { Modkey,                           XK_space,               nextlayout,         {0} },
     { Modkey|Shiftkey,                  XK_space,               prevlayout,         {0} },
 	{ Ctrlkey,  			            XK_space,  				togglefloating, 	{0} },
@@ -212,7 +214,6 @@ static Key keys[] = {
 	{ Altkey,							XK_2,					spawn,				SHCMD("iocane b 2")},
 	{ Altkey,							XK_3,					spawn,				SHCMD("iocane b 3")},
 	{ Modkey|Shiftkey,  			    XK_m,      				toggle_ffm, 	    {0} },
-	{ Modkey,  			                XK_c,      			togglefullscreen, 	    {0} },
     { Altkey,                           XK_F4,                  spawn,              {.v = powermenu} },
 
 	TAGKEYS(            			    XK_1,                      0)

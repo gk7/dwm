@@ -75,38 +75,81 @@ Adds different layouts to dwm.
 +		}
 +	}
 +}
---- /dev/null	2013-03-28 10:29:08.625922365 +0530
-+++ togglefullscreen.c	2012-11-30 22:30:45.111148000 +0530
-@@ -0,0 +1,32 @@
+--- /dev/null	2013-06-17 23:55:34.847753244 +0530
++++ tcl.h	2013-06-17 17:53:42.154490000 +0530
+@@ -0,0 +1,74 @@
 +void
-+togglefullscreen(const Arg *arg) {
-+	Client *c = selmon->sel;
++tcl(Monitor * m)
++{
++	int x, y, h, w, mw, sw, bdw;
++	unsigned int i, n;
++	Client * c;
 +
-+	if(!c)
++	for (n = 0, c = nexttiled(m->clients); c;
++	        c = nexttiled(c->next), n++);
++
++	if (n == 0)
 +		return;
-+	if(!c->isfullscreen) {
-+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
-+		                PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
-+		c->isfullscreen = True;
-+		c->oldstate = c->isfloating;
-+		c->oldbw = c->bw;
-+		c->bw = 0;
-+		c->isfloating = True;
-+		resizeclient(c, c->mon->mx, c->mon->my, c->mon->mw, c->mon->mh);
-+		XRaiseWindow(dpy, c->win);
-+	}
-+	else
++
++	c = nexttiled(m->clients);
++
++	mw = m->mfact * m->ww;
++	sw = (m->ww - mw) / 2;
++	bdw = (2 * c->bw);
++	resize(c,
++	       n < 3 ? m->wx : m->wx + sw,
++	       m->wy,
++	       n == 1 ? m->ww - bdw : mw - bdw,
++	       m->wh - bdw,
++	       False);
++
++	if (--n == 0)
++		return;
++
++	w = (m->ww - mw) / ((n > 1) + 1);
++	c = nexttiled(c->next);
++
++	if (n > 1)
 +	{
-+		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
-+		                PropModeReplace, (unsigned char*)0, 0);
-+		c->isfullscreen = False;
-+		c->isfloating = c->oldstate;
-+		c->bw = c->oldbw;
-+		c->x = c->oldx;
-+		c->y = c->oldy;
-+		c->w = c->oldw;
-+		c->h = c->oldh;
-+		resizeclient(c, c->x, c->y, c->w, c->h);
-+		arrange(c->mon);
++		x = m->wx + ((n > 1) ? mw + sw : mw);
++		y = m->wy;
++		h = m->wh / (n / 2);
++
++		if (h < bh)
++			h = m->wh;
++
++		for (i = 0; c && i < n / 2; c = nexttiled(c->next), i++)
++		{
++			resize(c,
++			       x,
++			       y,
++			       w - bdw,
++			       (i + 1 == n / 2) ? m->wy + m->wh - y - bdw : h - bdw,
++			       False);
++
++			if (h != m->wh)
++				y = c->y + HEIGHT(c);
++		}
++	}
++
++	x = (n + 1 / 2) == 1 ? mw : m->wx;
++	y = m->wy;
++	h = m->wh / ((n + 1) / 2);
++
++	if (h < bh)
++		h = m->wh;
++
++	for (i = 0; c; c = nexttiled(c->next), i++)
++	{
++		resize(c,
++		       x,
++		       y,
++		       (i + 1 == (n + 1) / 2) ? w - bdw : w - bdw,
++		       (i + 1 == (n + 1) / 2) ? m->wy + m->wh - y - bdw : h - bdw,
++		       False);
++
++		if (h != m->wh)
++			y = c->y + HEIGHT(c);
 +	}
 +}
+
