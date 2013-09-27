@@ -75,6 +75,41 @@ Adds different layouts to dwm.
 +		}
 +	}
 +}
+--- /dev/null	2013-03-28 10:29:08.625922365 +0530
++++ togglefullscreen.c	2012-11-30 22:30:45.111148000 +0530
+@@ -0,0 +1,32 @@
++void
++togglefullscreen(const Arg *arg) {
++	Client *c = selmon->sel;
++
++	if(!c)
++		return;
++	if(!c->isfullscreen) {
++		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
++		                PropModeReplace, (unsigned char*)&netatom[NetWMFullscreen], 1);
++		c->isfullscreen = True;
++		c->oldstate = c->isfloating;
++		c->oldbw = c->bw;
++		c->bw = 0;
++		c->isfloating = True;
++		resizeclient(c, c->mon->mx, c->mon->my, c->mon->mw, c->mon->mh);
++		XRaiseWindow(dpy, c->win);
++	}
++	else
++	{
++		XChangeProperty(dpy, c->win, netatom[NetWMState], XA_ATOM, 32,
++		                PropModeReplace, (unsigned char*)0, 0);
++		c->isfullscreen = False;
++		c->isfloating = c->oldstate;
++		c->bw = c->oldbw;
++		c->x = c->oldx;
++		c->y = c->oldy;
++		c->w = c->oldw;
++		c->h = c->oldh;
++		resizeclient(c, c->x, c->y, c->w, c->h);
++		arrange(c->mon);
++	}
++}
 --- /dev/null	2013-06-17 23:55:34.847753244 +0530
 +++ tcl.h	2013-06-17 17:53:42.154490000 +0530
 @@ -0,0 +1,74 @@
@@ -151,5 +186,35 @@ Adds different layouts to dwm.
 +		if (h != m->wh)
 +			y = c->y + HEIGHT(c);
 +	}
++}
+--- /dev/null	2013-09-26 22:03:44.771883219 +0530
++++ deck.c	2013-09-27 05:42:34.362742622 +0530
+@@ -0,0 +1,27 @@
++static void
++deck(Monitor *m) {
++	int dn;
++	unsigned int i, n, h, mw, my;
++	Client *c;
++
++	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
++	if(n == 0)
++		return;
++
++	dn = n - m->nmaster;
++	if(dn > 0) /* override layout symbol */
++		snprintf(m->ltsymbol, sizeof m->ltsymbol, "D %d", dn);
++
++	if(n > m->nmaster)
++		mw = m->nmaster ? m->ww * m->mfact : 0;
++	else
++		mw = m->ww;
++	for(i = my = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
++		if(i < m->nmaster) {
++			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
++			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
++			my += HEIGHT(c);
++		}
++		else
++			resize(c, m->wx + mw, m->wy, m->ww - mw - (2*c->bw), m->wh - (2*c->bw), False);
 +}
 

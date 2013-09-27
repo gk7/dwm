@@ -4,10 +4,12 @@ Maintainer: illusionist
 https://www.github.com/gk7
 */
 /*Appearance*/
+#include <X11/XF86keysym.h>
 #include "moveresize.c"
 #include "bstack.c"
 #include "gaplessgrid.c"
 #include "tcl.h"
+#include "deck.c"
 #define NUMCOLORS 8
 static const char colors[NUMCOLORS][ColLast][20] = {
     // border     fg         bg
@@ -40,12 +42,14 @@ static const unsigned int snap         		= 16;    	    // snap pixel
 static const Bool showbar               	= True;  	    // False means no bar
 static const Bool topbar                	= True;  	    // False means bottom bar
 //static const char clsymbol[]                = "x";
+static const unsigned int gappx				= 3;		// gap pixel between windows (uselessgaps patch)
+
 
 /* Layout(s) */
 static const float mfact      			= 0.65;  	        // factor of master area size [0.05..0.95]
 static const int nmaster      			= 1;     	        // number of clients in master area
 static const Bool resizehints 			= False; 	        // True means respect size hints in tiled resizals
-enum { LayoutMonocle = 0, LayoutGrid, LayoutBstack, LayoutTile, LayoutTcl, LayoutFloat };
+enum { LayoutMonocle = 0, LayoutGrid, LayoutBstack, LayoutTile, LayoutTcl, LayoutDeck, LayoutFloat };
 enum { LayoutDefault = LayoutMonocle};
 static const Layout layouts[] = {
 	/* symbol	function */
@@ -54,6 +58,7 @@ static const Layout layouts[] = {
 	{ "[ü]",	bstack },
 	{ "[þ]",	tile },
     { "[ô]",    tcl },
+    { "[D]",    deck },
 	{ "[ý]",	NULL },    		                            /* no layout function means floating behavior */
     { NULL,     NULL },
 };
@@ -134,6 +139,9 @@ static const char *powermenu[]      =   { SCRIPTS "power-menu", NULL };
 
 static Key keys[] = {
 	/* modifier                     	key        				function        	argument */
+    { 0,                                XF86XK_AudioNext,       spawn,              {.v = mpdnext } },
+    { 0,                                XF86XK_AudioPrev,       spawn,              {.v = mpdprev } },
+    { 0,                                XF86XK_AudioStop,       spawn,              {.v = mpdtoggle } },
 	{ Modkey,							XK_Escape,				spawn,				{.v = killnotify } },
 	{ Shiftkey,							XK_space,				spawn,				{.v = terminal } },
 	{ Shiftkey,               			XK_Return,      		spawn,      	    {.v = dmenurun } },
@@ -168,8 +176,8 @@ static Key keys[] = {
 	{ Modkey,           			    XK_b,      				togglebar,  	   	{0} },
 	{ Modkey,           			    XK_k,      				focusstack, 	    {.i = +1 } },
 	{ Modkey,           			    XK_j,      				focusstack, 	    {0} },
-	{ Modkey,           			    XK_i,      				incnmaster, 	    {.i = +1 } },
-	{ Modkey,           			    XK_d,      				incnmaster, 	    {.i = -1 } },
+//	{ Modkey,           			    XK_i,      				incnmaster, 	    {.i = +1 } },
+//	{ Modkey,           			    XK_d,      				incnmaster, 	    {.i = -1 } },
 	{ Modkey,           			    XK_Left,    		  	setmfact,   	    {.f = -0.05} },
 	{ Modkey,           			    XK_Right,   		   	setmfact,   	    {.f = +0.05} },
 	{ Modkey,           			    XK_Up,    		  		setmfact,   	    {.f = -0.05} },
@@ -183,6 +191,7 @@ static Key keys[] = {
 	{ Modkey,							XK_a,					setlayout,			{.v = &layouts[LayoutBstack]} },
 	{ Modkey,							XK_g,					setlayout,			{.v = &layouts[LayoutGrid]} },
 	{ Modkey,							XK_q,					setlayout,			{.v = &layouts[LayoutTcl]} },
+	{ Modkey,							XK_d,					setlayout,			{.v = &layouts[LayoutDeck]} },
     { Modkey,                           XK_space,               nextlayout,         {0} },
     { Modkey|Shiftkey,                  XK_space,               prevlayout,         {0} },
 	{ Ctrlkey,  			            XK_space,  				togglefloating, 	{0} },
@@ -233,12 +242,13 @@ static Button buttons[] = {
 	/* --------------------------------------menu-----------------------------------------*/
 	{ ClkWinTitle,          0,  		   	Button1,	    focusstack,     {.i = +1 } },
 	{ ClkWinTitle,          0,  		    Button2,	    focusstack,     {.i = -1 } },
-	{ ClkWinTitle,			0,				Button3,		killclient,		{0} },
+//	{ ClkWinTitle,			0,				Button3,		killclient,		{0} },
     { ClkWinTitle,          0,              Button4,        cycle,  		{.i = -1} },
     { ClkWinTitle,          0,              Button5,        cycle,  		{.i = +1} },
 	{ ClkStatusText,		0,				Button1,		spawn,			{.v = mpdnext} },
 	{ ClkStatusText,		0,				Button2,		spawn,			{.v = mpdprev} },
 //	{ ClkStatusText,		0,				Button3,		spawn,			{.v = menu } },
+	{ ClkStatusText,		0,				Button3,		killclient,			{0} },
 	{ ClkStatusText,		0,				Button4,		spawn,			{.v = volhigh} },
 	{ ClkStatusText,		0,				Button5,		spawn,			{.v = vollow} },
 //    { ClkRootWin,           0,              Button4,        spawn,          {.v = wallch} },
