@@ -188,22 +188,16 @@ Adds different layouts to dwm.
 +	}
 +}
 --- /dev/null	2013-09-26 22:03:44.771883219 +0530
-+++ deck.c	2013-09-27 05:42:34.362742622 +0530
-@@ -0,0 +1,27 @@
++++ deck.c	2013-09-27 06:07:49.381201297 +0530
+@@ -0,0 +1,21 @@
 +static void
 +deck(Monitor *m) {
-+	int dn;
 +	unsigned int i, n, h, mw, my;
 +	Client *c;
 +
 +	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
 +	if(n == 0)
 +		return;
-+
-+	dn = n - m->nmaster;
-+	if(dn > 0) /* override layout symbol */
-+		snprintf(m->ltsymbol, sizeof m->ltsymbol, "D %d", dn);
-+
 +	if(n > m->nmaster)
 +		mw = m->nmaster ? m->ww * m->mfact : 0;
 +	else
@@ -217,4 +211,3 @@ Adds different layouts to dwm.
 +		else
 +			resize(c, m->wx + mw, m->wy, m->ww - mw - (2*c->bw), m->wh - (2*c->bw), False);
 +}
-
