@@ -10,17 +10,18 @@ https://www.github.com/gk7
 #include "gaplessgrid.c"
 #include "tcl.h"
 #include "deck.c"
-#define NUMCOLORS 8
+#define NUMCOLORS 9
 static const char colors[NUMCOLORS][ColLast][20] = {
     // border     fg         bg
     { "#000000", "#bbbbbb", "#020202" },  // 01 - normal "3c3dbe"
-    { "#b525c7", "#bbbbbb", "#020202" },  // 02 - selected  "#AF7130" "b525c7" "ae8550"
+    { "#b525c7", "#20b2e7", "#020202" },  // 02 - selected  "#AF7130" "b525c7" "ae8550"
     { "#B3354C", "#B3354C", "#020202" },  // 03 - urgent
     { "#118900", "#777777", "#020202" },  // 04 - Occupied Color
     { "#845d78", "#dddddd", "#020202" },  // 05 - Title Text Color
     { "#00dd00", "#c1c1c1", "#020202" },  // 06 - Layout Symbol Color
     { "#000000", "#dddddd", "#020202" },  // 07 - Status Text Color1
     { "#118900", "#777777", "#020202" },  // 08 - Status Text Color2(symbols)
+    { "#B1D354", "#00bb00", "#020202" },  // 09 - light green 
 //    { "#E300FF", "#E300FF", "#020202" },  // 09 - magenta
 //    { "#000000", "#000000", "#000000" },  // unusable
 //    { "#337373", "#337373", "#020202" },  // 0B - cyan
